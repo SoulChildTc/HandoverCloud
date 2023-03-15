@@ -1,0 +1,45 @@
+appName: soul
+listen: 0.0.0.0
+port: 8080
+log:
+  # [TRACE, DEBUG, INFO, WARN, ERROR, FATAL, PANIC]
+  level: TRACE
+  console: true
+  closeFileLog: true
+  path: "./app.log"
+  rotate:
+    enable: false
+    # 单个文件最大大小, 单位M
+    maxSize: 50
+    # 最多保留多少个文件
+    maxBackups: 10
+    # 每个最多保留多少天
+    maxAge: 10
+    # 轮转后压缩
+    compress: false
+    localtime: true
+database:
+  # driver: sqlite
+  # path: "./data.db"
+  driver: mysql
+  host: 127.0.0.1
+  port: 3306
+  database: test1
+  username: root
+  password: root
+  charset: utf8mb4
+  # 最大连接数
+  maxOpenConns: 50
+  # 最大空闲连接数，建议和最大连接数一样
+  maxIdleConns: 50
+  # 空闲连接最大生存时间(单位分)
+  connMaxIdleTime: 5
+  # 设置一个连接最大能被使用多长时间，默认0，一直使用。(单位分)
+  connMaxLifetime: 5
+  # [INFO, WARN, ERROR, SILENT]
+  logLevel: info
+  # 日志中显示sql在代码中位置,稍微影响性能
+  reportCaller: true
+jwt:
+  secret: soul
+  jwtTtl: 12h

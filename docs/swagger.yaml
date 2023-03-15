@@ -1,0 +1,129 @@
+definitions:
+  core.resp:
+    properties:
+      status:
+        example: pong
+        type: string
+    type: object
+  dto.SystemLogin:
+    properties:
+      mobile:
+        type: string
+      password:
+        type: string
+    required:
+    - mobile
+    - password
+    type: object
+  dto.SystemRegister:
+    properties:
+      email:
+        type: string
+      mobile:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - mobile
+    - password
+    - username
+    type: object
+  httputil.ResponseBody:
+    properties:
+      data: {}
+      msg:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: SoulChild
+    url: http://soulchild.cn
+  description: This is a sample server celler server.
+  title: Swagger Example API
+  version: 0.0.1
+paths:
+  /ping:
+    get:
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.resp'
+      summary: health check
+      tags:
+      - core
+  /system/user/info:
+    get:
+      description: 用户信息
+      parameters:
+      - description: Authorization token
+        in: header
+        name: X-Token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: 成功返回用户信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 用户信息
+      tags:
+      - User
+  /system/user/login:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录
+      parameters:
+      - description: 手机号,密码
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SystemLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回token
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 用户登录
+      tags:
+      - User
+  /system/user/register:
+    post:
+      consumes:
+      - application/json
+      description: 用户注册
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SystemRegister'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 用户注册
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: x-token
+    type: apiKey
+swagger: "2.0"
