@@ -15,8 +15,10 @@ func LoadConfig() *viper.Viper {
 	// 命令行参数获取
 	pflag.StringP("env", "e", "dev", `运行环境, 可选项目: dev or test prod`)
 	pflag.StringP("config", "c", "app-dev.yaml", `配置文件路径`)
-	pflag.BoolP("migrate", "m", false, `迁移数据库`)
 	pflag.Lookup("config").DefValue = "[./app-dev.yaml, ./config/app-dev.yaml]"
+	pflag.BoolP("migrate", "m", false, `迁移数据库`)
+	pflag.StringP("kubeconfig", "k", "", `kubeconfig path, default in k8s cluster`)
+
 	pflag.Parse()
 
 	// 命令行参数绑定

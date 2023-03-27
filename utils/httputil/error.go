@@ -13,6 +13,14 @@ func OK(c *gin.Context, data any, msg string) {
 	}
 	c.JSON(http.StatusOK, resp)
 }
+func Page(c *gin.Context, data *PageResp, msg string) {
+	resp := PageResponseBody{
+		Status: "success",
+		Msg:    msg,
+		Data:   data,
+	}
+	c.JSON(http.StatusOK, resp)
+}
 
 func Error(c *gin.Context, msg string) {
 	ErrorWithCode(c, http.StatusBadRequest, msg)

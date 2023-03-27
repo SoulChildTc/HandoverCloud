@@ -4,6 +4,7 @@ import (
 	"soul/global"
 	"soul/internal/config"
 	"soul/internal/database"
+	"soul/internal/k8s"
 	"soul/internal/logger"
 	"soul/internal/server"
 )
@@ -23,6 +24,8 @@ func init() {
 		database.InitDBMigrate()
 	}
 
+	// 初始化client-go
+	global.K8s.Config, global.K8s.ClientSet = k8s.NewK8sClient()
 }
 
 func Execute() {

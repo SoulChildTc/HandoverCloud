@@ -5,6 +5,37 @@ definitions:
         example: pong
         type: string
     type: object
+  dto.K8sDeploymentCreate:
+    properties:
+      containerPort:
+        items:
+          $ref: '#/definitions/k8s.containerPort'
+        type: array
+      cpu:
+        type: string
+      httpHealthCheck:
+        $ref: '#/definitions/k8s.httpHealthCheck'
+      image:
+        type: string
+      imagePullSecret:
+        type: string
+      label:
+        additionalProperties:
+          type: string
+        type: object
+      memory:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      replicas:
+        type: integer
+    required:
+    - image
+    - name
+    - namespace
+    type: object
   dto.SystemLogin:
     properties:
       mobile:
@@ -30,6 +61,25 @@ definitions:
     - password
     - username
     type: object
+  httputil.PageResp:
+    properties:
+      items: {}
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  httputil.PageResponseBody:
+    properties:
+      data:
+        $ref: '#/definitions/httputil.PageResp'
+      msg:
+        type: string
+      status:
+        type: string
+    type: object
   httputil.ResponseBody:
     properties:
       data: {}
@@ -37,6 +87,25 @@ definitions:
         type: string
       status:
         type: string
+    type: object
+  k8s.containerPort:
+    properties:
+      name:
+        type: string
+      port:
+        type: integer
+      protocol:
+        type: string
+    type: object
+  k8s.httpHealthCheck:
+    properties:
+      httpHealthPath:
+        type: string
+      httpHealthPort:
+        description: 默认使用容器的0号端口
+        type: string
+    required:
+    - httpHealthPath
     type: object
 host: localhost:8080
 info:
@@ -47,6 +116,408 @@ info:
   title: Swagger Example API
   version: 0.0.1
 paths:
+  /api/v1/k8s/deployment/:
+    post:
+      consumes:
+      - application/json
+      description: 创建 Deployment
+      parameters:
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: Deployment对象
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.K8sDeploymentCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 创建 Deployment
+      tags:
+      - K8s
+      - Deployment
+  /api/v1/k8s/deployment/{namespace}:
+    get:
+      description: 获取Deployment列表
+      parameters:
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 根据Deployment名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Deployment列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取Deployment列表
+      tags:
+      - K8s
+      - Deployment
+  /api/v1/k8s/deployment/{namespace}/{deploymentName}:
+    delete:
+      description: 删除 Deployment
+      parameters:
+      - description: deployment名称
+        in: path
+        name: deploymentName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: 是否强制删除
+        in: query
+        name: force
+        type: boolean
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 删除 Deployment
+      tags:
+      - K8s
+      - Deployment
+    get:
+      description: 获取Deployment信息
+      parameters:
+      - description: deployment名称
+        in: path
+        name: deploymentName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Deployment信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 获取Deployment信息
+      tags:
+      - K8s
+      - Deployment
+  /api/v1/k8s/deployment/{namespace}/{deploymentName}/image:
+    put:
+      description: 修改 Deployment 容器镜像
+      parameters:
+      - description: Deployment名称
+        in: path
+        name: deploymentName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: 新的容器镜像,只更新第一个容器时 name参数可忽略
+        in: body
+        name: container
+        required: true
+        schema:
+          items:
+            properties:
+              image:
+                type: string
+              name:
+                type: string
+            required:
+            - image
+            type: object
+          type: array
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 修改 Deployment 容器镜像
+      tags:
+      - K8s
+      - Deployment
+  /api/v1/k8s/deployment/{namespace}/{deploymentName}/pods:
+    get:
+      description: 获取 Deployment 管理的 Pod 信息
+      parameters:
+      - description: Deployment名称
+        in: path
+        name: deploymentName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取 Deployment 管理的 Pod 信息
+      tags:
+      - K8s
+      - Deployment
+  /api/v1/k8s/deployment/{namespace}/{deploymentName}/restart:
+    put:
+      description: 重启 Deployment 管理的 Pod
+      parameters:
+      - description: Deployment名称
+        in: path
+        name: deploymentName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 重启 Deployment 管理的 Pod
+      tags:
+      - K8s
+      - Deployment
+  /api/v1/k8s/deployment/{namespace}/{deploymentName}/scale:
+    put:
+      description: 修改 Deployment 副本数
+      parameters:
+      - description: Deployment名称
+        in: path
+        name: deploymentName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: 副本数
+        in: body
+        name: replicas
+        required: true
+        schema:
+          type: integer
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 修改 Deployment 副本数
+      tags:
+      - K8s
+      - Deployment
+  /api/v1/k8s/pod/{namespace}:
+    get:
+      description: 获取Pod列表
+      parameters:
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 根据Pod名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Pod列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取Pod列表
+      tags:
+      - K8s
+  /api/v1/k8s/pod/{namespace}/{podName}:
+    delete:
+      description: 删除Pod
+      parameters:
+      - description: Pod名称
+        in: path
+        name: podName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+      summary: 删除Pod
+      tags:
+      - K8s
+    get:
+      description: 获取Pod信息
+      parameters:
+      - description: Pod名称
+        in: path
+        name: podName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Pod信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 获取Pod信息
+      tags:
+      - K8s
+  /api/v1/k8s/pod/{namespace}/{podName}/containers:
+    get:
+      description: 获取Pod容器信息
+      parameters:
+      - description: Pod名称
+        in: path
+        name: podName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取Pod容器信息
+      tags:
+      - K8s
+  /api/v1/k8s/pod/{namespace}/{podName}/log:
+    get:
+      description: 获取Pod日志
+      parameters:
+      - description: Pod名称
+        in: path
+        name: podName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: 容器名,默认第1个容器
+        in: query
+        name: containerName
+        type: string
+      - description: 查看最后多少行日志,默认200
+        in: query
+        name: line
+        type: integer
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Pod日志
+      summary: 获取Pod日志
+      tags:
+      - K8s
   /ping:
     get:
       description: do ping

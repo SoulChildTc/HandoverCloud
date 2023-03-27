@@ -1,4 +1,4 @@
-package system
+package user
 
 import (
 	"soul/apis/dao"

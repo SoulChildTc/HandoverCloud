@@ -18,6 +18,596 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/k8s/deployment/": {
+            "post": {
+                "description": "创建 Deployment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "创建 Deployment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Deployment对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sDeploymentCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/deployment/{namespace}": {
+            "get": {
+                "description": "获取Deployment列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "获取Deployment列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据Deployment名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Deployment列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/deployment/{namespace}/{deploymentName}": {
+            "get": {
+                "description": "获取Deployment信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "获取Deployment信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "deployment名称",
+                        "name": "deploymentName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Deployment信息",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除 Deployment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "删除 Deployment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "deployment名称",
+                        "name": "deploymentName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "是否强制删除",
+                        "name": "force",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/deployment/{namespace}/{deploymentName}/image": {
+            "put": {
+                "description": "修改 Deployment 容器镜像",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "修改 Deployment 容器镜像",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Deployment名称",
+                        "name": "deploymentName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "新的容器镜像,只更新第一个容器时 name参数可忽略",
+                        "name": "container",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "image"
+                                ],
+                                "properties": {
+                                    "image": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/k8s/deployment/{namespace}/{deploymentName}/pods": {
+            "get": {
+                "description": "获取 Deployment 管理的 Pod 信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "获取 Deployment 管理的 Pod 信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Deployment名称",
+                        "name": "deploymentName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/k8s/deployment/{namespace}/{deploymentName}/restart": {
+            "put": {
+                "description": "重启 Deployment 管理的 Pod",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "重启 Deployment 管理的 Pod",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Deployment名称",
+                        "name": "deploymentName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/k8s/deployment/{namespace}/{deploymentName}/scale": {
+            "put": {
+                "description": "修改 Deployment 副本数",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "修改 Deployment 副本数",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Deployment名称",
+                        "name": "deploymentName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "副本数",
+                        "name": "replicas",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/k8s/pod/{namespace}": {
+            "get": {
+                "description": "获取Pod列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s"
+                ],
+                "summary": "获取Pod列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据Pod名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Pod列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/pod/{namespace}/{podName}": {
+            "get": {
+                "description": "获取Pod信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s"
+                ],
+                "summary": "获取Pod信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Pod名称",
+                        "name": "podName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Pod信息",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除Pod",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s"
+                ],
+                "summary": "删除Pod",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Pod名称",
+                        "name": "podName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回"
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/pod/{namespace}/{podName}/containers": {
+            "get": {
+                "description": "获取Pod容器信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s"
+                ],
+                "summary": "获取Pod容器信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Pod名称",
+                        "name": "podName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/k8s/pod/{namespace}/{podName}/log": {
+            "get": {
+                "description": "获取Pod日志",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s"
+                ],
+                "summary": "获取Pod日志",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Pod名称",
+                        "name": "podName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "容器名,默认第1个容器",
+                        "name": "containerName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "查看最后多少行日志,默认200",
+                        "name": "line",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Pod日志"
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "description": "do ping",
@@ -143,6 +733,52 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.K8sDeploymentCreate": {
+            "type": "object",
+            "required": [
+                "image",
+                "name",
+                "namespace"
+            ],
+            "properties": {
+                "containerPort": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/k8s.containerPort"
+                    }
+                },
+                "cpu": {
+                    "type": "string"
+                },
+                "httpHealthCheck": {
+                    "$ref": "#/definitions/k8s.httpHealthCheck"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "imagePullSecret": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "memory": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "replicas": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.SystemLogin": {
             "type": "object",
             "required": [
@@ -180,6 +816,35 @@ const docTemplate = `{
                 }
             }
         },
+        "httputil.PageResp": {
+            "type": "object",
+            "properties": {
+                "items": {},
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "httputil.PageResponseBody": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/httputil.PageResp"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
         "httputil.ResponseBody": {
             "type": "object",
             "properties": {
@@ -188,6 +853,35 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "k8s.containerPort": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "protocol": {
+                    "type": "string"
+                }
+            }
+        },
+        "k8s.httpHealthCheck": {
+            "type": "object",
+            "required": [
+                "httpHealthPath"
+            ],
+            "properties": {
+                "httpHealthPath": {
+                    "type": "string"
+                },
+                "httpHealthPort": {
+                    "description": "默认使用容器的0号端口",
                     "type": "string"
                 }
             }
