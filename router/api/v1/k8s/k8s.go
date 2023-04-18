@@ -24,7 +24,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 		deployment.GET("/:namespace", k8sdeployment.GetDeploymentList)
 		deployment.GET("/:namespace/:deploymentName", k8sdeployment.GetDeploymentByName)
 		deployment.DELETE("/:namespace/:deploymentName", k8sdeployment.DeleteDeploymentByName)
-		//deployment.PUT("/:namespace/:deploymentName", k8sdeployment.)
+		deployment.PUT("/", k8sdeployment.UpdateK8sDeployment)
 		deployment.PUT("/:namespace/:deploymentName/image", k8sdeployment.SetDeploymentImage)
 		deployment.PUT("/:namespace/:deploymentName/scale", k8sdeployment.ScaleDeployment)
 		deployment.PUT("/:namespace/:deploymentName/restart", k8sdeployment.RestartDeployment)

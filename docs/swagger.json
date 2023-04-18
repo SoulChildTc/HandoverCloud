@@ -11,6 +11,38 @@
     },
     "host": "localhost:8080",
     "paths": {
+        "/api/v1/k8s/deployment": {
+            "put": {
+                "description": "使用原生 deployment api 对象更新",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "使用原生 deployment api 对象更新",
+                "parameters": [
+                    {
+                        "description": "Deployment Api Object",
+                        "name": "deploymentName",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/api/v1/k8s/deployment/": {
             "post": {
                 "description": "创建 Deployment",

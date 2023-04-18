@@ -116,6 +116,28 @@ info:
   title: Swagger Example API
   version: 0.0.1
 paths:
+  /api/v1/k8s/deployment:
+    put:
+      description: 使用原生 deployment api 对象更新
+      parameters:
+      - description: Deployment Api Object
+        in: body
+        name: deploymentName
+        required: true
+        schema:
+          type: object
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 使用原生 deployment api 对象更新
+      tags:
+      - K8s
+      - Deployment
   /api/v1/k8s/deployment/:
     post:
       consumes:

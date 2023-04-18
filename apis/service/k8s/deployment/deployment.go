@@ -327,15 +327,14 @@ func (d *Deployment) RestartDeployment(deploymentName string, namespace string) 
 	return nil
 }
 
-func (d *Deployment) UpdateDeployment(namespace, content string) (err error) {
-	//TODO 重写
+func (d *Deployment) UpdateK8sDeployment(content string) (err error) {
 	deploy := &appsv1.Deployment{}
 	err = json.Unmarshal([]byte(content), deploy)
 	if err != nil {
-		return errors.New("反序列化失败," + err.Error())
+		return errors.New("反序列化失败,请检查yaml。" + err.Error())
 	}
 
-	_, err = global.K8s.ClientSet.AppsV1().Deployments(namespace).Update(context.TODO(), deploy, metav1.UpdateOptions{})
+	_, err = global.K8s.ClientSet.AppsV1().Deployments(deploy.Namespace).Update(context.TODO(), deploy, metav1.UpdateOptions{})
 	if err != nil {
 		return errors.New("更新Deployment失败," + err.Error())
 	}

@@ -2,6 +2,7 @@ package deployment
 
 import (
 	"github.com/gin-gonic/gin"
+	"io"
 	"soul/apis/dto"
 	"soul/apis/service"
 	"soul/utils/httputil"
@@ -278,3 +279,30 @@ func RestartDeployment(c *gin.Context) {
 
 	httputil.OK(c, nil, "操作成功")
 }
+
+// UpdateK8sDeployment
+//
+//	@description	使用原生 deployment api 对象更新
+//	@tags			K8s,Deployment
+//	@summary		使用原生 deployment api 对象更新
+//	@produce		json
+//	@param			deploymentName	body	object	true	"Deployment Api Object"
+//	@Param			x-token			header	string	true	"Authorization token"
+//	@router			/api/v1/k8s/deployment [put]
+func UpdateK8sDeployment(c *gin.Context) {
+	content, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		httputil.Error(c, "参数读取失败")
+	}
+	err = service.K8sDeployment.UpdateK8sDeployment(string(content))
+	if err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	httputil.OK(c, nil, "更新成功")
+}
+
+//TODO CreateK8sDeployment 使用 K8s 1:1 Api 创建Deployment
+
+//TODO UpdateDeployment 使用 dto.K8sDeploymentCreate 对象更新Deployment
