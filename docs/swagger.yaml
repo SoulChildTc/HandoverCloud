@@ -518,20 +518,7 @@ paths:
       summary: 获取Pod日志
       tags:
       - K8s
-  /ping:
-    get:
-      description: do ping
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/core.resp'
-      summary: health check
-      tags:
-      - core
-  /system/user/info:
+  /api/v1/system/user/info:
     get:
       description: 用户信息
       parameters:
@@ -548,7 +535,7 @@ paths:
       summary: 用户信息
       tags:
       - User
-  /system/user/login:
+  /api/v1/system/user/login:
     post:
       consumes:
       - application/json
@@ -570,7 +557,7 @@ paths:
       summary: 用户登录
       tags:
       - User
-  /system/user/register:
+  /api/v1/system/user/register:
     post:
       consumes:
       - application/json
@@ -592,6 +579,19 @@ paths:
       summary: 用户注册
       tags:
       - User
+  /ping:
+    get:
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.resp'
+      summary: health check
+      tags:
+      - core
 securityDefinitions:
   ApiKeyAuth:
     in: header

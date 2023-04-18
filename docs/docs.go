@@ -608,27 +608,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ping": {
-            "get": {
-                "description": "do ping",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "core"
-                ],
-                "summary": "health check",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/core.resp"
-                        }
-                    }
-                }
-            }
-        },
-        "/system/user/info": {
+        "/api/v1/system/user/info": {
             "get": {
                 "description": "用户信息",
                 "tags": [
@@ -654,7 +634,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/system/user/login": {
+        "/api/v1/system/user/login": {
             "post": {
                 "description": "用户登录",
                 "consumes": [
@@ -688,7 +668,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/system/user/register": {
+        "/api/v1/system/user/register": {
             "post": {
                 "description": "用户注册",
                 "consumes": [
@@ -717,6 +697,26 @@ const docTemplate = `{
                         "description": "成功返回",
                         "schema": {
                             "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/ping": {
+            "get": {
+                "description": "do ping",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "core"
+                ],
+                "summary": "health check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.resp"
                         }
                     }
                 }

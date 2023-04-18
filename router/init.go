@@ -24,17 +24,17 @@ func InitRouter(r *gin.Engine) {
 		registerRoute(r, "", core.RegisterRoute)
 	}
 
-	// /system
-	sys := r.Group("/system")
-	{
-		registerRoute(sys, "", system.RegisterRoute)
-	}
-
 	// /api/v1
 	apiV1 := r.Group("/api/v1")
-	apiV1.Use(middleware.JwtAuth)
 	{
-		registerRoute(apiV1, "/k8s", k8s.RegisterRoute)
+		registerRoute(apiV1, "/system", system.RegisterRoute)
+	}
+
+	// /api/v1 - Auth
+	apiV1Auth := r.Group("/api/v1")
+	apiV1Auth.Use(middleware.JwtAuth)
+	{
+		registerRoute(apiV1Auth, "/k8s", k8s.RegisterRoute)
 	}
 
 	// /api/v2
