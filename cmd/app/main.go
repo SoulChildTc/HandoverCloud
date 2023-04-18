@@ -25,7 +25,7 @@ func init() {
 	}
 
 	// 初始化client-go
-	global.K8s.Config, global.K8s.ClientSet = k8s.NewK8sClient()
+	k8s.NewK8sClient()
 }
 
 func Execute() {
