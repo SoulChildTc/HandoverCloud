@@ -556,6 +556,116 @@ paths:
       tags:
       - K8s
       - Ingress
+  /api/v1/k8s/namespace/:
+    get:
+      description: 获取 Namespace 列表
+      parameters:
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 根据Namespace名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Namespace列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取 Namespace 列表
+      tags:
+      - K8s
+    post:
+      consumes:
+      - application/json
+      description: 创建 Namespace
+      parameters:
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: Namespace对象
+        in: body
+        name: data
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 创建 Namespace
+      tags:
+      - K8s
+      - Namespace
+  /api/v1/k8s/namespace/{namespaceName}:
+    get:
+      description: 获取 Namespace 信息
+      parameters:
+      - description: Namespace名称
+        in: path
+        name: namespaceName
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 Namespace 信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 获取 Namespace 信息
+      tags:
+      - K8s
+      - Namespace
+  /api/v1/k8s/namespace/{namespaceName}/:
+    delete:
+      description: 删除Namespace
+      parameters:
+      - description: Namespace名称
+        in: path
+        name: namespaceName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+      summary: 删除Namespace
+      tags:
+      - K8s
   /api/v1/k8s/pod/{namespace}:
     get:
       description: 获取Pod列表

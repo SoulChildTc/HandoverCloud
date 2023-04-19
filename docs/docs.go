@@ -594,6 +594,170 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/k8s/namespace/": {
+            "get": {
+                "description": "获取 Namespace 列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s"
+                ],
+                "summary": "获取 Namespace 列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据Namespace名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Namespace列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建 Namespace",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Namespace"
+                ],
+                "summary": "创建 Namespace",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Namespace对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/namespace/{namespaceName}": {
+            "get": {
+                "description": "获取 Namespace 信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Namespace"
+                ],
+                "summary": "获取 Namespace 信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Namespace名称",
+                        "name": "namespaceName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回 Namespace 信息",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/namespace/{namespaceName}/": {
+            "delete": {
+                "description": "删除Namespace",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s"
+                ],
+                "summary": "删除Namespace",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Namespace名称",
+                        "name": "namespaceName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回"
+                    }
+                }
+            }
+        },
         "/api/v1/k8s/pod/{namespace}": {
             "get": {
                 "description": "获取Pod列表",

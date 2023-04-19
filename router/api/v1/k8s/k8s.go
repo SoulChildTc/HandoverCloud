@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	k8sdeployment "soul/apis/controller/k8s/deployment"
 	k8singress "soul/apis/controller/k8s/ingress"
+	k8snamespace "soul/apis/controller/k8s/namespace"
 	k8spod "soul/apis/controller/k8s/pod"
 )
 
@@ -41,6 +42,14 @@ func RegisterRoute(r *gin.RouterGroup) {
 		ingress.GET("/:namespace/:ingressName", k8singress.GetIngressByName)
 		ingress.POST("/", k8singress.CreateSimpleIngress)
 		ingress.PUT("/", k8singress.UpdateSimpleIngress)
+	}
+
+	namespace := r.Group("/namespace")
+	{
+		namespace.GET("/", k8snamespace.GetNamespaceList)
+		namespace.GET("/:namespaceName", k8snamespace.GetNamespaceByName)
+		namespace.POST("/", k8snamespace.CreateNamespace)
+		namespace.DELETE("/:namespaceName", k8snamespace.DeleteNamespaceByName)
 	}
 
 }
