@@ -411,6 +411,144 @@
                 "responses": {}
             }
         },
+        "/api/v1/k8s/ingress/": {
+            "post": {
+                "description": "创建简单 Ingress",
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Ingress"
+                ],
+                "summary": "创建简单 Ingress",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "K8sIngressSimpleCreate 对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sIngressSimpleCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/ingress/{namespace}": {
+            "get": {
+                "description": "获取 Ingress 列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Ingress"
+                ],
+                "summary": "获取 Ingress 列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据 Ingress 名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回 Ingress 列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/ingress/{namespace}/{ingressName}": {
+            "get": {
+                "description": "获取 Ingress 信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Ingress"
+                ],
+                "summary": "获取 Ingress 信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ingress名称",
+                        "name": "ingressName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回 Ingress 信息",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/k8s/pod/{namespace}": {
             "get": {
                 "description": "获取Pod列表",
@@ -804,6 +942,40 @@
                 }
             }
         },
+        "dto.K8sIngressSimpleCreate": {
+            "type": "object",
+            "required": [
+                "name",
+                "namespace",
+                "rule"
+            ],
+            "properties": {
+                "annotations": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "ingressClassName": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "rule": {
+                    "$ref": "#/definitions/k8s.ruleConfig"
+                },
+                "tls": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/k8s.tlsConfig"
+                    }
+                }
+            }
+        },
         "dto.SystemLogin": {
             "type": "object",
             "required": [
@@ -907,6 +1079,43 @@
                 },
                 "httpHealthPort": {
                     "description": "默认使用容器的0号端口",
+                    "type": "string"
+                }
+            }
+        },
+        "k8s.ruleConfig": {
+            "type": "object",
+            "required": [
+                "service"
+            ],
+            "properties": {
+                "hosts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "path": {
+                    "type": "string"
+                },
+                "service": {
+                    "type": "string"
+                },
+                "servicePort": {
+                    "type": "integer"
+                }
+            }
+        },
+        "k8s.tlsConfig": {
+            "type": "object",
+            "properties": {
+                "host": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "secretName": {
                     "type": "string"
                 }
             }

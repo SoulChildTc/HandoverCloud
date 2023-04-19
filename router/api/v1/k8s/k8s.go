@@ -3,6 +3,7 @@ package k8s
 import (
 	"github.com/gin-gonic/gin"
 	k8sdeployment "soul/apis/controller/k8s/deployment"
+	k8singress "soul/apis/controller/k8s/ingress"
 	k8spod "soul/apis/controller/k8s/pod"
 )
 
@@ -21,6 +22,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 
 	deployment := r.Group("/deployment")
 	{
+		deployment.GET("/", k8sdeployment.GetDeploymentList)
 		deployment.GET("/:namespace", k8sdeployment.GetDeploymentList)
 		deployment.GET("/:namespace/:deploymentName", k8sdeployment.GetDeploymentByName)
 		deployment.DELETE("/:namespace/:deploymentName", k8sdeployment.DeleteDeploymentByName)
@@ -30,6 +32,15 @@ func RegisterRoute(r *gin.RouterGroup) {
 		deployment.PUT("/:namespace/:deploymentName/restart", k8sdeployment.RestartDeployment)
 		deployment.GET("/:namespace/:deploymentName/pods", k8sdeployment.GetDeploymentPods)
 		deployment.POST("/", k8sdeployment.CreateDeployment)
+	}
+
+	ingress := r.Group("/ingress")
+	{
+		ingress.GET("/", k8singress.GetIngressList)
+		ingress.GET("/:namespace", k8singress.GetIngressList)
+		ingress.GET("/:namespace/:ingressName", k8singress.GetIngressByName)
+		ingress.POST("/", k8singress.CreateSimpleIngress)
+
 	}
 
 }

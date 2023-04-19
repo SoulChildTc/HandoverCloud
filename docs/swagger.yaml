@@ -36,6 +36,29 @@ definitions:
     - name
     - namespace
     type: object
+  dto.K8sIngressSimpleCreate:
+    properties:
+      annotations:
+        additionalProperties:
+          type: string
+        type: object
+      ingressClassName:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      rule:
+        $ref: '#/definitions/k8s.ruleConfig'
+      tls:
+        items:
+          $ref: '#/definitions/k8s.tlsConfig'
+        type: array
+    required:
+    - name
+    - namespace
+    - rule
+    type: object
   dto.SystemLogin:
     properties:
       mobile:
@@ -106,6 +129,30 @@ definitions:
         type: string
     required:
     - httpHealthPath
+    type: object
+  k8s.ruleConfig:
+    properties:
+      hosts:
+        items:
+          type: string
+        type: array
+      path:
+        type: string
+      service:
+        type: string
+      servicePort:
+        type: integer
+    required:
+    - service
+    type: object
+  k8s.tlsConfig:
+    properties:
+      host:
+        items:
+          type: string
+        type: array
+      secretName:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -390,6 +437,99 @@ paths:
       tags:
       - K8s
       - Deployment
+  /api/v1/k8s/ingress/:
+    post:
+      description: 创建简单 Ingress
+      parameters:
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: K8sIngressSimpleCreate 对象
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.K8sIngressSimpleCreate'
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 创建简单 Ingress
+      tags:
+      - K8s
+      - Ingress
+  /api/v1/k8s/ingress/{namespace}:
+    get:
+      description: 获取 Ingress 列表
+      parameters:
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 根据 Ingress 名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 Ingress 列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取 Ingress 列表
+      tags:
+      - K8s
+      - Ingress
+  /api/v1/k8s/ingress/{namespace}/{ingressName}:
+    get:
+      description: 获取 Ingress 信息
+      parameters:
+      - description: ingress名称
+        in: path
+        name: ingressName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 Ingress 信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 获取 Ingress 信息
+      tags:
+      - K8s
+      - Ingress
   /api/v1/k8s/pod/{namespace}:
     get:
       description: 获取Pod列表

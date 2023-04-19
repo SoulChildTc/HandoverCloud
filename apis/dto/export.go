@@ -6,9 +6,10 @@ import (
 )
 
 type (
-	SystemRegister      = system.Register
-	SystemLogin         = system.Login
-	K8sDeploymentCreate = k8s.DeploymentCreate
-	K8sSetImage         = k8s.SetImage
+	SystemRegister         = system.Register
+	SystemLogin            = system.Login
+	K8sDeploymentCreate    = k8s.DeploymentCreate
+	K8sSetImage            = k8s.SetImage
+	K8sIngressSimpleCreate = k8s.IngressSimpleCreate
 	//SystemUserInfo system.UserInfo
 )

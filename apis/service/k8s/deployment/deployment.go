@@ -118,7 +118,7 @@ func (d *Deployment) CreateDeployment(deploymentCreate *dto.K8sDeploymentCreate)
 			Name:        deploymentCreate.Name,
 			Namespace:   deploymentCreate.Namespace,
 			Labels:      deploymentCreate.Label,
-			Annotations: map[string]string{"created-by": global.K8sFieldManager},
+			Annotations: map[string]string{"created-by": global.K8sManager},
 		},
 		Spec: appsv1.DeploymentSpec{
 			Replicas: &deploymentCreate.Replicas,
@@ -223,7 +223,7 @@ func (d *Deployment) CreateDeployment(deploymentCreate *dto.K8sDeploymentCreate)
 	}
 
 	_, err = global.K8s.ClientSet.AppsV1().Deployments(deploymentCreate.Namespace).Create(context.TODO(), deployment, metav1.CreateOptions{
-		FieldManager: global.K8sFieldManager,
+		FieldManager: global.K8sManager,
 	})
 	if err != nil {
 		return err
@@ -242,7 +242,7 @@ func (d *Deployment) ScaleDeployment(deploymentName, namespace string, scaleNum 
 	autoScale.Spec.Replicas = scaleNum
 
 	_, err = global.K8s.ClientSet.AppsV1().Deployments(namespace).UpdateScale(context.TODO(), deploymentName, autoScale, metav1.UpdateOptions{
-		FieldManager: global.K8sFieldManager,
+		FieldManager: global.K8sManager,
 	})
 	if err != nil {
 		return err
@@ -267,7 +267,7 @@ func (d *Deployment) DeleteDeploymentByName(deploymentName, namespace string, fo
 
 func (d *Deployment) SetDeploymentImage(deploymentName, namespace string, image dto.K8sSetImage) (err error) {
 	opt := metav1.PatchOptions{
-		FieldManager: global.K8sFieldManager,
+		FieldManager: global.K8sManager,
 	}
 
 	var pt types.PatchType
@@ -334,6 +334,13 @@ func (d *Deployment) UpdateK8sDeployment(content string) (err error) {
 		return errors.New("反序列化失败,请检查yaml。" + err.Error())
 	}
 
+	//deploy.ObjectMeta.ManagedFields = []metav1.ManagedFieldsEntry{
+	//	{
+	//		Manager:    global.K8sManager,
+	//		Operation:  metav1.ManagedFieldsOperationUpdate,
+	//		APIVersion: deploy.APIVersion,
+	//	},
+	//}
 	_, err = global.K8s.ClientSet.AppsV1().Deployments(deploy.Namespace).Update(context.TODO(), deploy, metav1.UpdateOptions{})
 	if err != nil {
 		return errors.New("更新Deployment失败," + err.Error())
