@@ -419,6 +419,44 @@ const docTemplate = `{
             }
         },
         "/api/v1/k8s/ingress/": {
+            "put": {
+                "description": "更新简单 Ingress",
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Ingress"
+                ],
+                "summary": "更新简单 Ingress",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "K8sIngressSimpleCreate 对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sIngressSimpleCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "创建简单 Ingress",
                 "produces": [

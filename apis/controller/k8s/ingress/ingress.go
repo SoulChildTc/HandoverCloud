@@ -102,3 +102,34 @@ func CreateSimpleIngress(c *gin.Context) {
 
 	httputil.OK(c, nil, "创建成功")
 }
+
+// UpdateSimpleIngress
+//
+//	@description	更新简单 Ingress
+//	@tags			K8s,Ingress
+//	@summary		更新简单 Ingress
+//	@produce		json
+//	@produce		json
+//	@Param			x-token	header	string						true	"Authorization token"
+//	@param			data	body	dto.K8sIngressSimpleCreate	true	"K8sIngressSimpleCreate 对象"
+//	@success		200		object	httputil.ResponseBody	"成功返回"
+//	@router			/api/v1/k8s/ingress/ [put]
+func UpdateSimpleIngress(c *gin.Context) {
+	// 初始化默认值
+	ingress := dto.K8sIngressSimpleCreate{}
+	ingress.Rule.Path = "/"
+
+	if err := c.ShouldBindJSON(&ingress); err != nil {
+		httputil.Error(c, httputil.ParseValidateError(err, &ingress).Error())
+		return
+	}
+
+	err := service.K8sIngress.UpdateSimpleIngress(&ingress)
+
+	if err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	httputil.OK(c, nil, "更新成功")
+}

@@ -464,6 +464,32 @@ paths:
       tags:
       - K8s
       - Ingress
+    put:
+      description: 更新简单 Ingress
+      parameters:
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: K8sIngressSimpleCreate 对象
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.K8sIngressSimpleCreate'
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 更新简单 Ingress
+      tags:
+      - K8s
+      - Ingress
   /api/v1/k8s/ingress/{namespace}:
     get:
       description: 获取 Ingress 列表
