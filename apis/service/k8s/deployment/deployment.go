@@ -38,11 +38,22 @@ func (d *Deployment) fromCells(cells []k8s.DataCell) []appsv1.Deployment {
 }
 
 func (d *Deployment) GetDeploymentByName(name, namespace string) (*appsv1.Deployment, error) {
-	pod, err := global.K8s.ClientSet.AppsV1().Deployments(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+	deployment, err := global.K8s.ClientSet.AppsV1().Deployments(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+	// 默认解码器会删除GVK,如果需要的话得自己添加。下面是WithoutVersionDecoder.Decode的解释和代码
+	//  clearing the gvk is just a convention of a codec
+	//  kind.SetGroupVersionKind(schema.GroupVersionKind{})
+
+	// 手动加回来
+	//deployment.SetGroupVersionKind(schema.GroupVersionKind{
+	//	Group:   "apps",
+	//	Version: "v1",
+	//	Kind:    "Deployment",
+	//})
+
 	if err != nil {
 		return nil, err
 	}
-	return pod, nil
+	return deployment, nil
 }
 
 func (d *Deployment) GetDeploymentList(filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
