@@ -1,7 +1,8 @@
 package global
 
 import (
-	"k8s.io/client-go/discovery/cached/disk"
+	"k8s.io/client-go/discovery"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )
@@ -9,7 +10,8 @@ import (
 type k8s struct {
 	ClientSet      *kubernetes.Clientset
 	Config         *rest.Config
-	CacheDiscovery *disk.CachedDiscoveryClient
+	CacheDiscovery discovery.DiscoveryInterface
+	DynamicClient  *dynamic.DynamicClient
 }
 
 var (
