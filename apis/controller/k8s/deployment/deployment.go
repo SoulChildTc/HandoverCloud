@@ -291,8 +291,9 @@ func RestartDeployment(c *gin.Context) {
 //	@router			/api/v1/k8s/deployment [put]
 func UpdateK8sDeployment(c *gin.Context) {
 	content, err := io.ReadAll(c.Request.Body)
-	if err != nil {
-		httputil.Error(c, "参数读取失败")
+	if err != nil || len(content) == 0 {
+		httputil.Error(c, "参数异常")
+		return
 	}
 	err = service.K8sDeployment.UpdateK8sDeployment(string(content))
 	if err != nil {
