@@ -1,13 +1,13 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample server celler server.",
-        "title": "Swagger Example API",
+        "description": "This is a Kubernetes-focused operations platform that includes CI/CD capabilities, gateway management, and service management features.",
+        "title": "HandoverCloud Backend Server",
         "contact": {
             "name": "SoulChild",
-            "url": "http://soulchild.cn"
+            "url": "https://github.com/SoulChildTc/HandoverCloud"
         },
-        "version": "0.0.1"
+        "version": "v0.1"
     },
     "host": "localhost:8080",
     "paths": {

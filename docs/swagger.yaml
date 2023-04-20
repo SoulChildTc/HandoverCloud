@@ -191,10 +191,11 @@ host: localhost:8080
 info:
   contact:
     name: SoulChild
-    url: http://soulchild.cn
-  description: This is a sample server celler server.
-  title: Swagger Example API
-  version: 0.0.1
+    url: https://github.com/SoulChildTc/HandoverCloud
+  description: This is a Kubernetes-focused operations platform that includes CI/CD
+    capabilities, gateway management, and service management features.
+  title: HandoverCloud Backend Server
+  version: v0.1
 paths:
   /api/v1/k8s/deployment:
     put:

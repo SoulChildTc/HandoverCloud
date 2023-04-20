@@ -11,7 +11,7 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "SoulChild",
-            "url": "http://soulchild.cn"
+            "url": "https://github.com/SoulChildTc/HandoverCloud"
         },
         "version": "{{.Version}}"
     },
@@ -1703,12 +1703,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "0.0.1",
+	Version:          "v0.1",
 	Host:             "localhost:8080",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Swagger Example API",
-	Description:      "This is a sample server celler server.",
+	Title:            "HandoverCloud Backend Server",
+	Description:      "This is a Kubernetes-focused operations platform that includes CI/CD capabilities, gateway management, and service management features.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
