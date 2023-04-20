@@ -59,6 +59,30 @@ definitions:
     - namespace
     - rule
     type: object
+  dto.K8sSvcSimpleCreate:
+    properties:
+      deploymentName:
+        type: string
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+      name:
+        type: string
+      namespace:
+        type: string
+      ports:
+        items:
+          $ref: '#/definitions/k8s.ports'
+        type: array
+      selector:
+        additionalProperties:
+          type: string
+        type: object
+    required:
+    - name
+    - namespace
+    type: object
   dto.SystemLogin:
     properties:
       mobile:
@@ -129,6 +153,15 @@ definitions:
         type: string
     required:
     - httpHealthPath
+    type: object
+  k8s.ports:
+    properties:
+      containerPort:
+        type: integer
+      name:
+        type: string
+      protocol:
+        type: string
     type: object
   k8s.ruleConfig:
     properties:
@@ -527,6 +560,33 @@ paths:
       - K8s
       - Ingress
   /api/v1/k8s/ingress/{namespace}/{ingressName}:
+    delete:
+      description: 删除 Ingress
+      parameters:
+      - description: Ingress名称
+        in: path
+        name: ingressName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+      summary: 删除 Ingress
+      tags:
+      - K8s
+      - Ingress
     get:
       description: 获取 Ingress 信息
       parameters:
@@ -857,6 +917,152 @@ paths:
       tags:
       - K8s
       - Pod
+  /api/v1/k8s/svc/:
+    post:
+      description: 创建简单 Svc
+      parameters:
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: K8sSvcSimpleCreate 对象
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.K8sSvcSimpleCreate'
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 创建简单 Svc
+      tags:
+      - K8s
+      - Svc
+    put:
+      description: 更新简单 Svc
+      parameters:
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: K8sSvcSimpleCreate 对象
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.K8sSvcSimpleCreate'
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 更新简单 Svc
+      tags:
+      - K8s
+      - Svc
+  /api/v1/k8s/svc/{namespace}:
+    get:
+      description: 获取Svc列表
+      parameters:
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 根据service名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Service列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取Svc列表
+      tags:
+      - K8s
+      - Svc
+  /api/v1/k8s/svc/{namespace}/{svcName}:
+    delete:
+      description: 删除Svc
+      parameters:
+      - description: Svc名称
+        in: path
+        name: svcName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+      summary: 删除Svc
+      tags:
+      - K8s
+      - Svc
+    get:
+      description: 获取Svc信息
+      parameters:
+      - description: Svc名称
+        in: path
+        name: svcName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 service 信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 获取Svc信息
+      tags:
+      - K8s
+      - Svc
   /api/v1/system/user/info:
     get:
       description: 用户信息
