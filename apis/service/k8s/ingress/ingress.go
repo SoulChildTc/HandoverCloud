@@ -67,6 +67,14 @@ func (i *Ingress) GetIngressList(filterName, namespace string, limit, page int) 
 	}, nil
 }
 
+func (i *Ingress) DeleteIngressByName(name, namespace string) (err error) {
+	err = global.K8s.ClientSet.NetworkingV1().Ingresses(namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (i *Ingress) CreateSimpleIngress(ingressSimpleCreate *dto.K8sIngressSimpleCreate) (err error) {
 	ing := i.simpleIngressToIngress(ingressSimpleCreate)
 

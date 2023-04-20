@@ -1,7 +1,9 @@
 package deployment
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"soul/apis/dto"
 	"soul/apis/service"
 	"soul/utils/httputil"
@@ -132,4 +134,44 @@ func UpdateSimpleIngress(c *gin.Context) {
 	}
 
 	httputil.OK(c, nil, "更新成功")
+}
+
+// DeleteIngressByName
+//
+//	@description	删除 Ingress
+//	@tags			K8s,Ingress
+//	@summary		删除 Ingress
+//	@produce		json
+//	@param			ingressName		path	string	true	"Ingress名称"
+//	@param			namespace	path	string	true	"Namespace"
+//	@Param			x-token		header	string	true	"Authorization token"
+//	@success		200			object	nil		"成功返回"
+//	@router			/api/v1/k8s/ingress/{namespace}/{ingressName} [delete]
+func DeleteIngressByName(c *gin.Context) {
+	name := c.Param("ingressName")
+	namespace := c.Param("namespace")
+	if name == "" || namespace == "" {
+		httputil.Error(c, "ingress名和名称空间不能为空")
+		return
+	}
+
+	_, err := service.K8sIngress.GetIngressByName(name, namespace)
+	if err != nil {
+		switch {
+		case errors.IsNotFound(err):
+			httputil.Error(c, fmt.Sprintf(`Service "%s" 在 "%s" 中未找到`, name, namespace))
+		default:
+			httputil.Error(c, err.Error())
+		}
+		return
+	}
+
+	err = service.K8sIngress.DeleteIngressByName(name, namespace)
+
+	if err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	httputil.OK(c, nil, "删除成功")
 }
