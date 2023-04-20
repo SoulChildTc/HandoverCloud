@@ -1,4 +1,4 @@
-package deployment
+package ingress
 
 import (
 	"fmt"
