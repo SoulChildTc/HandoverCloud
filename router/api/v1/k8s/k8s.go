@@ -6,6 +6,7 @@ import (
 	k8singress "soul/apis/controller/k8s/ingress"
 	k8snamespace "soul/apis/controller/k8s/namespace"
 	k8spod "soul/apis/controller/k8s/pod"
+	k8ssvc "soul/apis/controller/k8s/svc"
 )
 
 // k8s模块路由
@@ -52,6 +53,16 @@ func RegisterRoute(r *gin.RouterGroup) {
 		namespace.GET("/:namespaceName", k8snamespace.GetNamespaceByName)
 		namespace.POST("/", k8snamespace.CreateNamespace)
 		namespace.DELETE("/:namespaceName", k8snamespace.DeleteNamespaceByName)
+	}
+
+	svc := r.Group("/svc")
+	{
+		svc.GET("/", k8ssvc.GetSvcList)
+		svc.GET("/:namespace", k8ssvc.GetSvcList)
+		svc.GET("/:namespace/:svcName", k8ssvc.GetSvcByName)
+		svc.DELETE("/:namespace/:svcName", k8ssvc.DeleteSvcByName)
+		svc.POST("/", k8ssvc.CreateSimpleSvc)
+		svc.PUT("/", k8ssvc.UpdateSimpleSvc)
 	}
 
 }
