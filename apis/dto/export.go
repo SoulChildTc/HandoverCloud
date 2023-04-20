@@ -11,5 +11,6 @@ type (
 	K8sDeploymentCreate    = k8s.DeploymentCreate
 	K8sSetImage            = k8s.SetImage
 	K8sIngressSimpleCreate = k8s.IngressSimpleCreate
+	K8sSvcSimpleCreate     = k8s.SvcSimpleCreate
 	//SystemUserInfo system.UserInfo
 )
