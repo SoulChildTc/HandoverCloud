@@ -41,6 +41,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 		ingress.GET("/", k8singress.GetIngressList)
 		ingress.GET("/:namespace", k8singress.GetIngressList)
 		ingress.GET("/:namespace/:ingressName", k8singress.GetIngressByName)
+		ingress.DELETE("/:namespace/:ingressName", k8singress.DeleteIngressByName)
 		ingress.POST("/", k8singress.CreateSimpleIngress)
 		ingress.PUT("/", k8singress.UpdateSimpleIngress)
 	}
