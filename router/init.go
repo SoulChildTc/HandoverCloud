@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"soul/apis/service/k8s/pod"
 	"soul/middleware"
 	"soul/router/api/v1/k8s"
 	"soul/router/api/v1/system"
@@ -28,6 +29,8 @@ func InitRouter(r *gin.Engine) {
 	apiV1 := r.Group("/api/v1")
 	{
 		registerRoute(apiV1, "/system", system.RegisterRoute)
+		// sockjs
+		apiV1.GET("/sockjs/*path", gin.WrapH(pod.CreateAttachHandler("/api/v1/sockjs")))
 	}
 
 	// /api/v1 - Auth

@@ -19,6 +19,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 		pod.DELETE("/:namespace/:podName", k8spod.DeletePodByName)
 		pod.GET("/:namespace/:podName/log", k8spod.GetPodLog)
 		pod.GET("/:namespace/:podName/containers", k8spod.GetPodContainers)
+		pod.GET("/:namespace/:podName/shell", k8spod.ExecContainer)
 	}
 
 	deployment := r.Group("/deployment")

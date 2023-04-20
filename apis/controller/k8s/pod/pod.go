@@ -12,7 +12,7 @@ import (
 // GetPodByName
 //
 //	@description	获取Pod信息
-//	@tags			K8s
+//	@tags			K8s,Pod
 //	@summary		获取Pod信息
 //	@produce		json
 //	@param			podName		path	string					true	"Pod名称"
@@ -41,7 +41,7 @@ func GetPodByName(c *gin.Context) {
 // GetPodList
 //
 //	@description	获取Pod列表
-//	@tags			K8s
+//	@tags			K8s,Pod
 //	@summary		获取Pod列表
 //	@produce		json
 //	@param			namespace	path	string						false	"Namespace 不填为全部"
@@ -77,7 +77,7 @@ func GetPodList(c *gin.Context) {
 // DeletePodByName
 //
 //	@description	删除Pod
-//	@tags			K8s
+//	@tags			K8s,Pod
 //	@summary		删除Pod
 //	@produce		json
 //	@param			podName		path	string	true	"Pod名称"
@@ -117,7 +117,7 @@ func DeletePodByName(c *gin.Context) {
 // GetPodLog
 //
 //	@description	获取Pod日志
-//	@tags			K8s
+//	@tags			K8s,Pod
 //	@summary		获取Pod日志
 //	@produce		json
 //	@param			podName			path	string	true	"Pod名称"
@@ -130,7 +130,7 @@ func DeletePodByName(c *gin.Context) {
 func GetPodLog(c *gin.Context) {
 	name := c.Param("podName")
 	namespace := c.Param("namespace")
-	containerName := c.Param("containerName")
+	containerName := c.Query("containerName")
 	line, err := strconv.Atoi(c.DefaultQuery("line", "200"))
 	if err != nil {
 		line = 200
@@ -153,7 +153,7 @@ func GetPodLog(c *gin.Context) {
 // GetPodContainers
 //
 //	@description	获取Pod容器信息
-//	@tags			K8s
+//	@tags			K8s,Pod
 //	@summary		获取Pod容器信息
 //	@produce		json
 //	@param			podName		path	string	true	"Pod名称"
@@ -181,4 +181,42 @@ func GetPodContainers(c *gin.Context) {
 	}
 
 	httputil.OK(c, data, "获取成功")
+}
+
+// ExecContainer
+//
+//	@description	获取 exec sessionId
+//	@tags			K8s,Pod
+//	@summary		获取 exec sessionId
+//	@produce		json
+//	@param			podName			path	string	true	"Pod名称"
+//	@param			namespace		path	string	true	"Namespace"
+//	@param			containerName	query	string	false	"容器名,默认第1个容器"
+//	@Param			shell			query	string  false	"执行shell"
+//	@Param			x-token			header	string	true	"Authorization token"
+//	@success		200				object	nil		"成功返回 sessionId 日志"
+//	@router			/api/v1/k8s/pod/{namespace}/{podName}/exec [get]
+func ExecContainer(c *gin.Context) {
+	namespace := c.Param("namespace")
+	podName := c.Param("podName")
+	containerName := c.Query("containerName")
+	if containerName == "" {
+		containers, err := service.K8sPod.GetPodContainers(podName, namespace)
+		if err != nil {
+			httputil.Error(c, err.Error())
+			return
+		}
+		containerName = containers[0].Name
+	}
+
+	shell := c.Query("shell")
+
+	sessionID, err := service.K8sPod.StartTerminal(namespace, podName, containerName, shell)
+	if err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	httputil.OK(c, gin.H{"id": sessionID}, "获取成功")
+
 }

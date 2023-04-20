@@ -701,6 +701,7 @@ paths:
       summary: 获取Pod列表
       tags:
       - K8s
+      - Pod
   /api/v1/k8s/pod/{namespace}/{podName}:
     delete:
       description: 删除Pod
@@ -728,6 +729,7 @@ paths:
       summary: 删除Pod
       tags:
       - K8s
+      - Pod
     get:
       description: 获取Pod信息
       parameters:
@@ -756,6 +758,7 @@ paths:
       summary: 获取Pod信息
       tags:
       - K8s
+      - Pod
   /api/v1/k8s/pod/{namespace}/{podName}/containers:
     get:
       description: 获取Pod容器信息
@@ -781,6 +784,43 @@ paths:
       summary: 获取Pod容器信息
       tags:
       - K8s
+      - Pod
+  /api/v1/k8s/pod/{namespace}/{podName}/exec:
+    get:
+      description: 获取 exec sessionId
+      parameters:
+      - description: Pod名称
+        in: path
+        name: podName
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: 容器名,默认第1个容器
+        in: query
+        name: containerName
+        type: string
+      - description: 执行shell
+        in: query
+        name: shell
+        type: string
+      - description: Authorization token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 sessionId 日志
+      summary: 获取 exec sessionId
+      tags:
+      - K8s
+      - Pod
   /api/v1/k8s/pod/{namespace}/{podName}/log:
     get:
       description: 获取Pod日志
@@ -816,6 +856,7 @@ paths:
       summary: 获取Pod日志
       tags:
       - K8s
+      - Pod
   /api/v1/system/user/info:
     get:
       description: 用户信息

@@ -765,7 +765,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "K8s"
+                    "K8s",
+                    "Pod"
                 ],
                 "summary": "获取Pod列表",
                 "parameters": [
@@ -818,7 +819,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "K8s"
+                    "K8s",
+                    "Pod"
                 ],
                 "summary": "获取Pod信息",
                 "parameters": [
@@ -859,7 +861,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "K8s"
+                    "K8s",
+                    "Pod"
                 ],
                 "summary": "删除Pod",
                 "parameters": [
@@ -899,7 +902,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "K8s"
+                    "K8s",
+                    "Pod"
                 ],
                 "summary": "获取Pod容器信息",
                 "parameters": [
@@ -928,6 +932,59 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/v1/k8s/pod/{namespace}/{podName}/exec": {
+            "get": {
+                "description": "获取 exec sessionId",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Pod"
+                ],
+                "summary": "获取 exec sessionId",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Pod名称",
+                        "name": "podName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "容器名,默认第1个容器",
+                        "name": "containerName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "执行shell",
+                        "name": "shell",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回 sessionId 日志"
+                    }
+                }
+            }
+        },
         "/api/v1/k8s/pod/{namespace}/{podName}/log": {
             "get": {
                 "description": "获取Pod日志",
@@ -935,7 +992,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "K8s"
+                    "K8s",
+                    "Pod"
                 ],
                 "summary": "获取Pod日志",
                 "parameters": [

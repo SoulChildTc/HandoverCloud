@@ -6,6 +6,7 @@ import (
 	"io"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/tools/remotecommand"
 	"soul/apis/service/k8s"
 	"soul/global"
 	"soul/utils/httputil"
@@ -119,4 +120,22 @@ func (p *Pod) GetPodContainers(podName, namespace string) (containers []corev1.C
 		return nil, err
 	}
 	return pod.Spec.Containers, nil
+}
+
+func (p *Pod) StartTerminal(namespace, podName, containerName, shell string) (string, error) {
+	sessionID, err := genTerminalSessionId()
+	if err != nil {
+		return "", err
+	}
+
+	terminalSessions.Set(sessionID, TerminalSession{
+		id:       sessionID,
+		bound:    make(chan error),
+		sizeChan: make(chan remotecommand.TerminalSize),
+	})
+
+	// {"Op":"bind","SessionID":"db1888b4dd29e3c61540c56a5f7cfc22"}
+	// {"Op":"stdin","Data":"ls\r","Cols":164,"Rows":41}
+	go WaitForTerminal(namespace, podName, containerName, shell, sessionID)
+	return sessionID, err
 }
