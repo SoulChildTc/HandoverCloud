@@ -1,16 +1,31 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"soul/utils"
 	"soul/utils/httputil"
+	"strings"
 )
 
-func JwtAuth(c *gin.Context) {
-	token := c.Request.Header.Get("X-Token")
+const bearerPrefix = "Bearer "
+
+func extractToken(c *gin.Context) (string, error) {
+	token := c.Request.Header.Get("Authorization")
 	if token == "" {
-		httputil.ErrorWithCode(c, http.StatusUnauthorized, "Unauthorized")
+		return "", fmt.Errorf("authorization token is missing")
+	}
+	if !strings.HasPrefix(token, bearerPrefix) {
+		return "", fmt.Errorf("invalid token")
+	}
+	return strings.TrimSpace(token[len(bearerPrefix):]), nil
+}
+
+func JwtAuth(c *gin.Context) {
+	token, err := extractToken(c)
+	if err != nil {
+		httputil.ErrorWithCode(c, http.StatusUnauthorized, err.Error())
 		c.Abort()
 		return
 	}

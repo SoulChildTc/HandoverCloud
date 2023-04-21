@@ -209,7 +209,7 @@ paths:
           type: object
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -227,7 +227,7 @@ paths:
       parameters:
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: Deployment对象
@@ -257,7 +257,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: 根据Deployment名字模糊查询
@@ -303,7 +303,7 @@ paths:
         type: boolean
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -332,7 +332,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -377,7 +377,7 @@ paths:
           type: array
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -403,7 +403,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -429,7 +429,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -461,7 +461,7 @@ paths:
           type: integer
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -477,7 +477,7 @@ paths:
       parameters:
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: K8sIngressSimpleCreate 对象
@@ -503,7 +503,7 @@ paths:
       parameters:
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: K8sIngressSimpleCreate 对象
@@ -534,7 +534,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: 根据 Ingress 名字模糊查询
@@ -576,7 +576,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -603,7 +603,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -623,7 +623,7 @@ paths:
       parameters:
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: 根据Namespace名字模糊查询
@@ -655,7 +655,7 @@ paths:
       parameters:
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: Namespace对象
@@ -686,7 +686,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -716,7 +716,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -737,7 +737,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: 根据Pod名字模糊查询
@@ -779,7 +779,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -806,7 +806,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -836,7 +836,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -870,7 +870,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -906,7 +906,7 @@ paths:
         type: integer
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -925,7 +925,7 @@ paths:
       parameters:
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: K8sSvcSimpleCreate 对象
@@ -951,7 +951,7 @@ paths:
       parameters:
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: K8sSvcSimpleCreate 对象
@@ -982,7 +982,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       - description: 根据service名字模糊查询
@@ -1024,7 +1024,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -1051,7 +1051,7 @@ paths:
         type: string
       - description: Authorization token
         in: header
-        name: x-token
+        name: Authorization
         required: true
         type: string
       produces:
@@ -1071,7 +1071,7 @@ paths:
       parameters:
       - description: Authorization token
         in: header
-        name: X-Token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -1142,6 +1142,6 @@ paths:
 securityDefinitions:
   ApiKeyAuth:
     in: header
-    name: x-token
+    name: Authorization
     type: apiKey
 swagger: "2.0"

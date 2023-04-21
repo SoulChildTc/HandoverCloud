@@ -17,7 +17,7 @@ import (
 //	@produce		json
 //	@param			svcName		path	string					true	"Svc名称"
 //	@param			namespace	path	string					true	"Namespace"
-//	@Param			x-token		header	string					true	"Authorization token"
+//	@Param			Authorization		header	string					true	"Authorization token"
 //	@success		200			object	httputil.ResponseBody	"成功返回 service 信息"
 //	@router			/api/v1/k8s/svc/{namespace}/{svcName} [get]
 func GetSvcByName(c *gin.Context) {
@@ -45,7 +45,7 @@ func GetSvcByName(c *gin.Context) {
 //	@summary		获取Svc列表
 //	@produce		json
 //	@param			namespace	path	string						false	"Namespace 不填为全部"
-//	@Param			x-token		header	string						true	"Authorization token"
+//	@Param			Authorization		header	string						true	"Authorization token"
 //	@Param			filter		query	string						false	"根据service名字模糊查询"
 //	@Param			limit		query	string						false	"一页获取多少条数据,默认十条"
 //	@Param			page		query	string						false	"获取第几页的数据,默认第一页"
@@ -82,7 +82,7 @@ func GetSvcList(c *gin.Context) {
 //	@produce		json
 //	@param			svcName		path	string	true	"Svc名称"
 //	@param			namespace	path	string	true	"Namespace"
-//	@Param			x-token		header	string	true	"Authorization token"
+//	@Param			Authorization		header	string	true	"Authorization token"
 //	@success		200			object	nil		"成功返回"
 //	@router			/api/v1/k8s/svc/{namespace}/{svcName} [delete]
 func DeleteSvcByName(c *gin.Context) {
@@ -121,7 +121,7 @@ func DeleteSvcByName(c *gin.Context) {
 //	@summary		创建简单 Svc
 //	@produce		json
 //	@produce		json
-//	@Param			x-token	header	string					true	"Authorization token"
+//	@Param			Authorization	header	string					true	"Authorization token"
 //	@param			data	body	dto.K8sSvcSimpleCreate	true	"K8sSvcSimpleCreate 对象"
 //	@success		200		object	httputil.ResponseBody	"成功返回"
 //	@router			/api/v1/k8s/svc/ [post]
@@ -151,7 +151,7 @@ func CreateSimpleSvc(c *gin.Context) {
 //	@summary		更新简单 Svc
 //	@produce		json
 //	@produce		json
-//	@Param			x-token	header	string						true	"Authorization token"
+//	@Param			Authorization	header	string						true	"Authorization token"
 //	@param			data	body	dto.K8sSvcSimpleCreate	true	"K8sSvcSimpleCreate 对象"
 //	@success		200		object	httputil.ResponseBody	"成功返回"
 //	@router			/api/v1/k8s/svc/ [put]

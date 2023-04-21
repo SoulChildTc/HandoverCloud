@@ -10,7 +10,7 @@ import cmd "soul/cmd/app"
 // @host						localhost:8080
 // @securityDefinitions.apikey	ApiKeyAuth
 // @in							header
-// @name						x-token
+// @name						Authorization
 // @BasePath					/
 func main() {
 	cmd.Execute()

@@ -65,7 +65,7 @@ func Register(c *gin.Context) {
 //	@description	用户信息
 //	@tags			User
 //	@summary		用户信息
-//	@Param			X-Token	header	string					true	"Authorization token"
+//	@Param			Authorization	header	string					true	"Authorization token"
 //	@success		200		object	httputil.ResponseBody	"成功返回用户信息"
 //	@router			/api/v1/system/user/info [get]
 func Info(c *gin.Context) {

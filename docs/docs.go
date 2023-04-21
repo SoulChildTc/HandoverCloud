@@ -42,7 +42,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -68,7 +68,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -113,7 +113,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -175,7 +175,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -223,7 +223,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -290,7 +290,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -327,7 +327,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -364,7 +364,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -410,7 +410,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -434,7 +434,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -472,7 +472,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -517,7 +517,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -579,7 +579,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -621,7 +621,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -647,7 +647,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -696,7 +696,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -742,7 +742,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -785,7 +785,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -818,7 +818,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -880,7 +880,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -922,7 +922,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -963,7 +963,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1012,7 +1012,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1065,7 +1065,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1093,7 +1093,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -1131,7 +1131,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -1176,7 +1176,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -1238,7 +1238,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1280,7 +1280,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "x-token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1303,7 +1303,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Authorization token",
-                        "name": "X-Token",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1695,7 +1695,7 @@ const docTemplate = `{
     "securityDefinitions": {
         "ApiKeyAuth": {
             "type": "apiKey",
-            "name": "x-token",
+            "name": "Authorization",
             "in": "header"
         }
     }
