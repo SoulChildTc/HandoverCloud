@@ -451,7 +451,7 @@
                 }
             },
             "post": {
-                "description": "创建简单 Ingress",
+                "description": "创建简单 Ingress ,仅支持一个路由前缀,支持多个Host, 对应一个Service",
                 "produces": [
                     "application/json",
                     "application/json"
@@ -1110,7 +1110,7 @@
                 }
             },
             "post": {
-                "description": "创建简单 Svc",
+                "description": "创建简单 Svc, 支持通过DeploymentName 转换为 Selector, 也可以自定义Selector, 二选一。 仅支持创建ClusterIP类型",
                 "produces": [
                     "application/json",
                     "application/json"

@@ -116,7 +116,7 @@ func DeleteSvcByName(c *gin.Context) {
 
 // CreateSimpleSvc
 //
-//	@description	创建简单 Svc
+//	@description	创建简单 Svc, 支持通过DeploymentName 转换为 Selector, 也可以自定义Selector, 二选一。 仅支持创建ClusterIP类型
 //	@tags			K8s,Svc
 //	@summary		创建简单 Svc
 //	@produce		json

@@ -76,12 +76,12 @@ func GetIngressList(c *gin.Context) {
 
 // CreateSimpleIngress
 //
-//	@description	创建简单 Ingress
+//	@description	创建简单 Ingress ,仅支持一个路由前缀,支持多个Host, 对应一个Service
 //	@tags			K8s,Ingress
 //	@summary		创建简单 Ingress
 //	@produce		json
 //	@produce		json
-//	@Param			x-token	header	string					true	"Authorization token"
+//	@Param			x-token	header	string						true	"Authorization token"
 //	@param			data	body	dto.K8sIngressSimpleCreate	true	"K8sIngressSimpleCreate 对象"
 //	@success		200		object	httputil.ResponseBody	"成功返回"
 //	@router			/api/v1/k8s/ingress/ [post]

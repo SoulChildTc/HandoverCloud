@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"soul/apis/dto"
 	"soul/apis/service"
+	log "soul/internal/logger"
 	"soul/utils/httputil"
 )
 
@@ -18,6 +19,7 @@ import (
 //	@success		200		object	httputil.ResponseBody	"成功返回token"
 //	@router			/api/v1/system/user/login [post]
 func Login(c *gin.Context) {
+	log.DebugC("%v", c.Request.Header)
 	var u dto.SystemLogin
 	err := c.ShouldBindJSON(&u)
 	if err != nil {
