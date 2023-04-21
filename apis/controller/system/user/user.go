@@ -26,13 +26,11 @@ func Login(c *gin.Context) {
 		httputil.Error(c, httputil.ParseValidateError(err, &u).Error())
 		return
 	}
-	res, ok := service.SystemUser.Login(u)
-	if ok {
-		httputil.OK(c, gin.H{"token": res}, "登录成功")
-	} else {
-		httputil.Error(c, res)
+	res, err := service.SystemUser.Login(u)
+	if err != nil {
+		httputil.Error(c, err.Error())
 	}
-
+	httputil.OK(c, res, "登录成功")
 }
 
 // Register
