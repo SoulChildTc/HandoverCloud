@@ -7,7 +7,7 @@ type ports struct {
 }
 
 type SvcSimpleCreate struct {
-	Name           string            `json:"name" binding:"required" msg:"Deployment名称不能为空"`
+	Name           string            `json:"name" binding:"required" msg:"Service名称不能为空"`
 	Namespace      string            `json:"namespace" binding:"required" msg:"Namespace不能为空"`
 	Labels         map[string]string `json:"labels"`
 	DeploymentName string            `json:"deploymentName"`
