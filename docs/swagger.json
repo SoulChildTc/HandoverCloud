@@ -1070,6 +1070,377 @@
                 }
             }
         },
+        "/api/v1/k8s/secret/": {
+            "put": {
+                "description": "更新 Opaque 类型的 Secret",
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "更新 Opaque 类型的 Secret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "K8sSecretCreate 对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sSecretCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建 Opaque 类型的 Secret",
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "创建 Opaque 类型的 Secret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "K8sSecretCreate 对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sSecretCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/secret/_docker-registry": {
+            "put": {
+                "description": "更新 docker-registry 类型的 Secret",
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "更新 docker-registry 类型的 Secret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "K8sSecretForDockerRegistryCreate 对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sSecretForDockerRegistryCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建 docker-registry 类型的 Secret",
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "创建 docker-registry 类型的 Secret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "K8sSecretForDockerRegistryCreate 对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sSecretForDockerRegistryCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/secret/_tls": {
+            "put": {
+                "description": "更新 tls 类型的 Secret",
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "更新 tls 类型的 Secret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "K8sSecretForTlsCreate 对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sSecretForTlsCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建 tls 类型的 Secret",
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "创建 tls 类型的 Secret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "K8sSecretForTlsCreate 对象",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.K8sSecretForTlsCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/secret/{namespace}": {
+            "get": {
+                "description": "获取Secret列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "获取Secret列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据Secret名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Secret列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/secret/{namespace}/{secretName}": {
+            "get": {
+                "description": "获取Secret信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "获取Secret信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Secret名称",
+                        "name": "secretName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Secret信息",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除Secret",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "删除Secret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Secret名称",
+                        "name": "secretName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回"
+                    }
+                }
+            }
+        },
         "/api/v1/k8s/svc/": {
             "put": {
                 "description": "更新简单 Svc",
@@ -1490,6 +1861,73 @@
                 }
             }
         },
+        "dto.K8sSecretCreate": {
+            "type": "object",
+            "required": [
+                "data",
+                "name",
+                "namespace"
+            ],
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.K8sSecretForDockerRegistryCreate": {
+            "type": "object",
+            "required": [
+                "auths",
+                "name",
+                "namespace"
+            ],
+            "properties": {
+                "auths": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/k8s.Auth"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.K8sSecretForTlsCreate": {
+            "type": "object",
+            "required": [
+                "certificate",
+                "name",
+                "namespace",
+                "privateKey"
+            ],
+            "properties": {
+                "certificate": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "privateKey": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.K8sSvcSimpleCreate": {
             "type": "object",
             "required": [
@@ -1600,6 +2038,21 @@
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "k8s.Auth": {
+            "type": "object",
+            "required": [
+                "password",
+                "user"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "user": {
                     "type": "string"
                 }
             }

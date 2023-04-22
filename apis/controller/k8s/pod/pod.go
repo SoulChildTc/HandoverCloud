@@ -15,10 +15,10 @@ import (
 //	@tags			K8s,Pod
 //	@summary		获取Pod信息
 //	@produce		json
-//	@param			podName		path	string					true	"Pod名称"
-//	@param			namespace	path	string					true	"Namespace"
-//	@Param			Authorization		header	string					true	"Authorization token"
-//	@success		200			object	httputil.ResponseBody	"成功返回Pod信息"
+//	@param			podName			path	string					true	"Pod名称"
+//	@param			namespace		path	string					true	"Namespace"
+//	@Param			Authorization	header	string					true	"Authorization token"
+//	@success		200				object	httputil.ResponseBody	"成功返回Pod信息"
 //	@router			/api/v1/k8s/pod/{namespace}/{podName} [get]
 func GetPodByName(c *gin.Context) {
 	name := c.Param("podName")
@@ -44,12 +44,12 @@ func GetPodByName(c *gin.Context) {
 //	@tags			K8s,Pod
 //	@summary		获取Pod列表
 //	@produce		json
-//	@param			namespace	path	string						false	"Namespace 不填为全部"
-//	@Param			Authorization		header	string						true	"Authorization token"
-//	@Param			filter		query	string						false	"根据Pod名字模糊查询"
-//	@Param			limit		query	string						false	"一页获取多少条数据,默认十条"
-//	@Param			page		query	string						false	"获取第几页的数据,默认第一页"
-//	@success		200			object	httputil.PageResponseBody	"成功返回Pod列表"
+//	@param			namespace		path	string						false	"Namespace 不填为全部"
+//	@Param			Authorization	header	string						true	"Authorization token"
+//	@Param			filter			query	string						false	"根据Pod名字模糊查询"
+//	@Param			limit			query	string						false	"一页获取多少条数据,默认十条"
+//	@Param			page			query	string						false	"获取第几页的数据,默认第一页"
+//	@success		200				object	httputil.PageResponseBody	"成功返回Pod列表"
 //	@router			/api/v1/k8s/pod/{namespace} [get]
 func GetPodList(c *gin.Context) {
 	namespace := c.Param("namespace")
@@ -80,10 +80,10 @@ func GetPodList(c *gin.Context) {
 //	@tags			K8s,Pod
 //	@summary		删除Pod
 //	@produce		json
-//	@param			podName		path	string	true	"Pod名称"
-//	@param			namespace	path	string	true	"Namespace"
-//	@Param			Authorization		header	string	true	"Authorization token"
-//	@success		200			object	nil		"成功返回"
+//	@param			podName			path	string	true	"Pod名称"
+//	@param			namespace		path	string	true	"Namespace"
+//	@Param			Authorization	header	string	true	"Authorization token"
+//	@success		200				object	nil		"成功返回"
 //	@router			/api/v1/k8s/pod/{namespace}/{podName} [delete]
 func DeletePodByName(c *gin.Context) {
 	name := c.Param("podName")
@@ -124,7 +124,7 @@ func DeletePodByName(c *gin.Context) {
 //	@param			namespace		path	string	true	"Namespace"
 //	@param			containerName	query	string	false	"容器名,默认第1个容器"
 //	@Param			line			query	int		false	"查看最后多少行日志,默认200"
-//	@Param			Authorization			header	string	true	"Authorization token"
+//	@Param			Authorization	header	string	true	"Authorization token"
 //	@success		200				object	nil		"成功返回Pod日志"
 //	@router			/api/v1/k8s/pod/{namespace}/{podName}/log [get]
 func GetPodLog(c *gin.Context) {
@@ -156,9 +156,9 @@ func GetPodLog(c *gin.Context) {
 //	@tags			K8s,Pod
 //	@summary		获取Pod容器信息
 //	@produce		json
-//	@param			podName		path	string	true	"Pod名称"
-//	@param			namespace	path	string	true	"Namespace"
-//	@Param			Authorization		header	string	true	"Authorization token"
+//	@param			podName			path	string	true	"Pod名称"
+//	@param			namespace		path	string	true	"Namespace"
+//	@Param			Authorization	header	string	true	"Authorization token"
 //	@router			/api/v1/k8s/pod/{namespace}/{podName}/containers [get]
 func GetPodContainers(c *gin.Context) {
 	name := c.Param("podName")
@@ -192,8 +192,8 @@ func GetPodContainers(c *gin.Context) {
 //	@param			podName			path	string	true	"Pod名称"
 //	@param			namespace		path	string	true	"Namespace"
 //	@param			containerName	query	string	false	"容器名,默认第1个容器"
-//	@Param			shell			query	string  false	"执行shell"
-//	@Param			Authorization			header	string	true	"Authorization token"
+//	@Param			shell			query	string	false	"执行shell"
+//	@Param			Authorization	header	string	true	"Authorization token"
 //	@success		200				object	nil		"成功返回 sessionId 日志"
 //	@router			/api/v1/k8s/pod/{namespace}/{podName}/exec [get]
 func ExecContainer(c *gin.Context) {

@@ -17,7 +17,7 @@ import (
 //	@produce		json
 //	@param			deploymentName	path	string					true	"deployment名称"
 //	@param			namespace		path	string					true	"Namespace"
-//	@Param			Authorization			header	string					true	"Authorization token"
+//	@Param			Authorization	header	string					true	"Authorization token"
 //	@success		200				object	httputil.ResponseBody	"成功返回Deployment信息"
 //	@router			/api/v1/k8s/deployment/{namespace}/{deploymentName} [get]
 func GetDeploymentByName(c *gin.Context) {
@@ -44,12 +44,12 @@ func GetDeploymentByName(c *gin.Context) {
 //	@tags			K8s,Deployment
 //	@summary		获取Deployment列表
 //	@produce		json
-//	@param			namespace	path	string						false	"Namespace 不填为全部"
-//	@Param			Authorization		header	string						true	"Authorization token"
-//	@Param			filter		query	string						false	"根据Deployment名字模糊查询"
-//	@Param			limit		query	string						false	"一页获取多少条数据,默认十条"
-//	@Param			page		query	string						false	"获取第几页的数据,默认第一页"
-//	@success		200			object	httputil.PageResponseBody	"成功返回Deployment列表"
+//	@param			namespace		path	string						false	"Namespace 不填为全部"
+//	@Param			Authorization	header	string						true	"Authorization token"
+//	@Param			filter			query	string						false	"根据Deployment名字模糊查询"
+//	@Param			limit			query	string						false	"一页获取多少条数据,默认十条"
+//	@Param			page			query	string						false	"获取第几页的数据,默认第一页"
+//	@success		200				object	httputil.PageResponseBody	"成功返回Deployment列表"
 //	@router			/api/v1/k8s/deployment/{namespace} [get]
 func GetDeploymentList(c *gin.Context) {
 	namespace := c.Param("namespace")
@@ -82,7 +82,7 @@ func GetDeploymentList(c *gin.Context) {
 //	@produce		json
 //	@param			deploymentName	path	string	true	"Deployment名称"
 //	@param			namespace		path	string	true	"Namespace"
-//	@Param			Authorization			header	string	true	"Authorization token"
+//	@Param			Authorization	header	string	true	"Authorization token"
 //	@router			/api/v1/k8s/deployment/{namespace}/{deploymentName}/pods [get]
 func GetDeploymentPods(c *gin.Context) {
 	name := c.Param("deploymentName")
@@ -115,8 +115,8 @@ func GetDeploymentPods(c *gin.Context) {
 //	@Accept			json
 //	@produce		json
 //	@Param			Authorization	header	string					true	"Authorization token"
-//	@param			data	body	dto.K8sDeploymentCreate	true	"Deployment对象"
-//	@success		200		object	httputil.ResponseBody	"成功返回"
+//	@param			data			body	dto.K8sDeploymentCreate	true	"Deployment对象"
+//	@success		200				object	httputil.ResponseBody	"成功返回"
 //	@router			/api/v1/k8s/deployment/ [post]
 func CreateDeployment(c *gin.Context) {
 	// 初始化默认值
@@ -150,7 +150,7 @@ func CreateDeployment(c *gin.Context) {
 //	@param			deploymentName	path	string	true	"Deployment名称"
 //	@param			namespace		path	string	true	"Namespace"
 //	@Param			replicas		body	int		true	"副本数"
-//	@Param			Authorization			header	string	true	"Authorization token"
+//	@Param			Authorization	header	string	true	"Authorization token"
 //	@router			/api/v1/k8s/deployment/{namespace}/{deploymentName}/scale [put]
 func ScaleDeployment(c *gin.Context) {
 	name := c.Param("deploymentName")
@@ -188,7 +188,7 @@ func ScaleDeployment(c *gin.Context) {
 //	@param			deploymentName	path	string					true	"deployment名称"
 //	@param			namespace		path	string					true	"Namespace"
 //	@param			force			query	bool					false	"是否强制删除"
-//	@Param			Authorization			header	string					true	"Authorization token"
+//	@Param			Authorization	header	string					true	"Authorization token"
 //	@success		200				object	httputil.ResponseBody	"成功返回"
 //	@router			/api/v1/k8s/deployment/{namespace}/{deploymentName} [delete]
 func DeleteDeploymentByName(c *gin.Context) {
@@ -226,7 +226,7 @@ func DeleteDeploymentByName(c *gin.Context) {
 //	@param			deploymentName	path	string			true	"Deployment名称"
 //	@param			namespace		path	string			true	"Namespace"
 //	@Param			container		body	dto.K8sSetImage	true	"新的容器镜像,只更新第一个容器时 name参数可忽略"
-//	@Param			Authorization			header	string			true	"Authorization token"
+//	@Param			Authorization	header	string			true	"Authorization token"
 //	@router			/api/v1/k8s/deployment/{namespace}/{deploymentName}/image [put]
 func SetDeploymentImage(c *gin.Context) {
 	name := c.Param("deploymentName")
@@ -260,7 +260,7 @@ func SetDeploymentImage(c *gin.Context) {
 //	@produce		json
 //	@param			deploymentName	path	string	true	"Deployment名称"
 //	@param			namespace		path	string	true	"Namespace"
-//	@Param			Authorization			header	string	true	"Authorization token"
+//	@Param			Authorization	header	string	true	"Authorization token"
 //	@router			/api/v1/k8s/deployment/{namespace}/{deploymentName}/restart [put]
 func RestartDeployment(c *gin.Context) {
 	name := c.Param("deploymentName")
@@ -287,7 +287,7 @@ func RestartDeployment(c *gin.Context) {
 //	@summary		使用原生 deployment api 对象更新
 //	@produce		json
 //	@param			deploymentName	body	object	true	"Deployment Api Object"
-//	@Param			Authorization			header	string	true	"Authorization token"
+//	@Param			Authorization	header	string	true	"Authorization token"
 //	@router			/api/v1/k8s/deployment [put]
 func UpdateK8sDeployment(c *gin.Context) {
 	content, err := io.ReadAll(c.Request.Body)

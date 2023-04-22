@@ -15,9 +15,9 @@ import (
 //	@tags			K8s,Namespace
 //	@summary		获取 Namespace 信息
 //	@produce		json
-//	@param			namespaceName		path	string					true	"Namespace名称"
-//	@Param			Authorization		header	string					true	"Authorization token"
-//	@success		200			object	httputil.ResponseBody	"成功返回 Namespace 信息"
+//	@param			namespaceName	path	string					true	"Namespace名称"
+//	@Param			Authorization	header	string					true	"Authorization token"
+//	@success		200				object	httputil.ResponseBody	"成功返回 Namespace 信息"
 //	@router			/api/v1/k8s/namespace/{namespaceName} [get]
 func GetNamespaceByName(c *gin.Context) {
 	name := c.Param("namespaceName")
@@ -42,11 +42,11 @@ func GetNamespaceByName(c *gin.Context) {
 //	@tags			K8s
 //	@summary		获取 Namespace 列表
 //	@produce		json
-//	@Param			Authorization		header	string						true	"Authorization token"
-//	@Param			filter		query	string						false	"根据Namespace名字模糊查询"
-//	@Param			limit		query	string						false	"一页获取多少条数据,默认十条"
-//	@Param			page		query	string						false	"获取第几页的数据,默认第一页"
-//	@success		200			object	httputil.PageResponseBody	"成功返回Namespace列表"
+//	@Param			Authorization	header	string						true	"Authorization token"
+//	@Param			filter			query	string						false	"根据Namespace名字模糊查询"
+//	@Param			limit			query	string						false	"一页获取多少条数据,默认十条"
+//	@Param			page			query	string						false	"获取第几页的数据,默认第一页"
+//	@success		200				object	httputil.PageResponseBody	"成功返回Namespace列表"
 //	@router			/api/v1/k8s/namespace/ [get]
 func GetNamespaceList(c *gin.Context) {
 	params := new(struct {
@@ -76,10 +76,10 @@ func GetNamespaceList(c *gin.Context) {
 //	@tags			K8s
 //	@summary		删除Namespace
 //	@produce		json
-//	@param			namespaceName		path	string	true	"Namespace名称"
-//	@param			namespace	path	string	true	"Namespace"
-//	@Param			Authorization		header	string	true	"Authorization token"
-//	@success		200			object	nil		"成功返回"
+//	@param			namespaceName	path	string	true	"Namespace名称"
+//	@param			namespace		path	string	true	"Namespace"
+//	@Param			Authorization	header	string	true	"Authorization token"
+//	@success		200				object	nil		"成功返回"
 //	@router			/api/v1/k8s/namespace/{namespaceName}/ [delete]
 func DeleteNamespaceByName(c *gin.Context) {
 	name := c.Param("namespaceName")
@@ -118,8 +118,8 @@ func DeleteNamespaceByName(c *gin.Context) {
 //	@Accept			json
 //	@produce		json
 //	@Param			Authorization	header	string					true	"Authorization token"
-//	@param			data	body	object	true	"Namespace对象"
-//	@success		200		object	httputil.ResponseBody	"成功返回"
+//	@param			data			body	object					true	"Namespace对象"
+//	@success		200				object	httputil.ResponseBody	"成功返回"
 //	@router			/api/v1/k8s/namespace/ [post]
 func CreateNamespace(c *gin.Context) {
 	content, err := io.ReadAll(c.Request.Body)

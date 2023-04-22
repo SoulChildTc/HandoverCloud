@@ -17,7 +17,7 @@ import (
 //	@produce		json
 //	@param			ingressName		path	string					true	"ingress名称"
 //	@param			namespace		path	string					true	"Namespace"
-//	@Param			Authorization			header	string					true	"Authorization token"
+//	@Param			Authorization	header	string					true	"Authorization token"
 //	@success		200				object	httputil.ResponseBody	"成功返回 Ingress 信息"
 //	@router			/api/v1/k8s/ingress/{namespace}/{ingressName} [get]
 func GetIngressByName(c *gin.Context) {
@@ -44,12 +44,12 @@ func GetIngressByName(c *gin.Context) {
 //	@tags			K8s,Ingress
 //	@summary		获取 Ingress 列表
 //	@produce		json
-//	@param			namespace	path	string						false	"Namespace 不填为全部"
-//	@Param			Authorization		header	string						true	"Authorization token"
-//	@Param			filter		query	string						false	"根据 Ingress 名字模糊查询"
-//	@Param			limit		query	string						false	"一页获取多少条数据,默认十条"
-//	@Param			page		query	string						false	"获取第几页的数据,默认第一页"
-//	@success		200			object	httputil.PageResponseBody	"成功返回 Ingress 列表"
+//	@param			namespace		path	string						false	"Namespace 不填为全部"
+//	@Param			Authorization	header	string						true	"Authorization token"
+//	@Param			filter			query	string						false	"根据 Ingress 名字模糊查询"
+//	@Param			limit			query	string						false	"一页获取多少条数据,默认十条"
+//	@Param			page			query	string						false	"获取第几页的数据,默认第一页"
+//	@success		200				object	httputil.PageResponseBody	"成功返回 Ingress 列表"
 //	@router			/api/v1/k8s/ingress/{namespace} [get]
 func GetIngressList(c *gin.Context) {
 	namespace := c.Param("namespace")
@@ -82,8 +82,8 @@ func GetIngressList(c *gin.Context) {
 //	@produce		json
 //	@produce		json
 //	@Param			Authorization	header	string						true	"Authorization token"
-//	@param			data	body	dto.K8sIngressSimpleCreate	true	"K8sIngressSimpleCreate 对象"
-//	@success		200		object	httputil.ResponseBody	"成功返回"
+//	@param			data			body	dto.K8sIngressSimpleCreate	true	"K8sIngressSimpleCreate 对象"
+//	@success		200				object	httputil.ResponseBody		"成功返回"
 //	@router			/api/v1/k8s/ingress/ [post]
 func CreateSimpleIngress(c *gin.Context) {
 	// 初始化默认值
@@ -113,8 +113,8 @@ func CreateSimpleIngress(c *gin.Context) {
 //	@produce		json
 //	@produce		json
 //	@Param			Authorization	header	string						true	"Authorization token"
-//	@param			data	body	dto.K8sIngressSimpleCreate	true	"K8sIngressSimpleCreate 对象"
-//	@success		200		object	httputil.ResponseBody	"成功返回"
+//	@param			data			body	dto.K8sIngressSimpleCreate	true	"K8sIngressSimpleCreate 对象"
+//	@success		200				object	httputil.ResponseBody		"成功返回"
 //	@router			/api/v1/k8s/ingress/ [put]
 func UpdateSimpleIngress(c *gin.Context) {
 	// 初始化默认值
@@ -143,9 +143,9 @@ func UpdateSimpleIngress(c *gin.Context) {
 //	@summary		删除 Ingress
 //	@produce		json
 //	@param			ingressName		path	string	true	"Ingress名称"
-//	@param			namespace	path	string	true	"Namespace"
-//	@Param			Authorization		header	string	true	"Authorization token"
-//	@success		200			object	nil		"成功返回"
+//	@param			namespace		path	string	true	"Namespace"
+//	@Param			Authorization	header	string	true	"Authorization token"
+//	@success		200				object	nil		"成功返回"
 //	@router			/api/v1/k8s/ingress/{namespace}/{ingressName} [delete]
 func DeleteIngressByName(c *gin.Context) {
 	name := c.Param("ingressName")

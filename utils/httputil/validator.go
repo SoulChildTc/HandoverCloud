@@ -28,6 +28,7 @@ func ParseValidateError(err error, obj any) error {
 	return errors.New(strings.Join(errResult, ","))
 }
 
+// RegisterAllValidator 注册自定义校验器
 func RegisterAllValidator() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("mobile", mobileValidate) // 指定tag名称和处理函数
