@@ -6,6 +6,7 @@ import (
 	k8singress "soul/apis/controller/k8s/ingress"
 	k8snamespace "soul/apis/controller/k8s/namespace"
 	k8spod "soul/apis/controller/k8s/pod"
+	k8ssecret "soul/apis/controller/k8s/secret"
 	k8ssvc "soul/apis/controller/k8s/svc"
 )
 
@@ -65,4 +66,18 @@ func RegisterRoute(r *gin.RouterGroup) {
 		svc.PUT("/", k8ssvc.UpdateSimpleSvc)
 	}
 
+	secret := r.Group("/secret")
+	{
+		secret.GET("/", k8ssecret.GetSecretList)
+		secret.GET("/:namespace", k8ssecret.GetSecretList)
+		secret.GET("/:namespace/:secretName", k8ssecret.GetSecretByName)
+		secret.DELETE("/:namespace/:secretName", k8ssecret.DeleteSecretByName)
+		secret.POST("/", k8ssecret.CreateSecret)
+		secret.PUT("/", k8ssecret.UpdateSecret)
+
+		secret.POST("/_docker-registry", k8ssecret.CreateSecretForDockerRegistry)
+		secret.PUT("/_docker-registry", k8ssecret.UpdateSecretForDockerRegistry)
+		secret.POST("/_tls", k8ssecret.CreateSecretForTls)
+		secret.PUT("/_tls", k8ssecret.UpdateSecretForTls)
+	}
 }

@@ -5,6 +5,7 @@ import (
 	"soul/apis/service/k8s/ingress"
 	"soul/apis/service/k8s/namespace"
 	"soul/apis/service/k8s/pod"
+	"soul/apis/service/k8s/secret"
 	"soul/apis/service/k8s/svc"
 	"soul/apis/service/system/user"
 )
@@ -16,4 +17,5 @@ var (
 	K8sIngress    ingress.Ingress
 	K8sNamespace  namespace.Namespace
 	K8sSvc        svc.Svc
+	K8sSecret     secret.Secret
 )
