@@ -32,16 +32,16 @@ func (p *Pod) fromCells(cells []k8s.DataCell) []corev1.Pod {
 	return pods
 }
 
-func (p *Pod) GetPodByName(name, namespace string) (*corev1.Pod, error) {
-	pod, err := global.K8s.ClientSet.CoreV1().Pods(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+func (p *Pod) GetPodByName(clusterName, name, namespace string) (*corev1.Pod, error) {
+	pod, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Pods(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	return pod, nil
 }
 
-func (p *Pod) GetPodList(filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
-	pods, err := global.K8s.ClientSet.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
+func (p *Pod) GetPodList(clusterName, filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
+	pods, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -69,17 +69,17 @@ func (p *Pod) GetPodList(filterName, namespace string, limit, page int) (*httput
 	}, nil
 }
 
-func (p *Pod) DeletePodByName(podName, namespace string) (err error) {
-	err = global.K8s.ClientSet.CoreV1().Pods(namespace).Delete(context.TODO(), podName, metav1.DeleteOptions{})
+func (p *Pod) DeletePodByName(clusterName, podName, namespace string) (err error) {
+	err = global.K8s.Use(clusterName).ClientSet.CoreV1().Pods(namespace).Delete(context.TODO(), podName, metav1.DeleteOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (p *Pod) GetPodLog(podName, containerName, namespace string, line int64) (log string, err error) {
+func (p *Pod) GetPodLog(clusterName, podName, containerName, namespace string, line int64) (log string, err error) {
 	if containerName == "" {
-		pod, err := p.GetPodByName(podName, namespace)
+		pod, err := p.GetPodByName(clusterName, podName, namespace)
 		if err != nil {
 			return "", err
 		}
@@ -98,7 +98,7 @@ func (p *Pod) GetPodLog(podName, containerName, namespace string, line int64) (l
 		InsecureSkipTLSVerifyBackend: false,
 	}
 
-	req := global.K8s.ClientSet.CoreV1().Pods(namespace).GetLogs(podName, option)
+	req := global.K8s.Use(clusterName).ClientSet.CoreV1().Pods(namespace).GetLogs(podName, option)
 	logReader, err := req.Stream(context.TODO())
 	if err != nil {
 		return "", err
@@ -114,15 +114,15 @@ func (p *Pod) GetPodLog(podName, containerName, namespace string, line int64) (l
 	return buf.String(), nil
 }
 
-func (p *Pod) GetPodContainers(podName, namespace string) (containers []corev1.Container, err error) {
-	pod, err := global.K8s.ClientSet.CoreV1().Pods(namespace).Get(context.TODO(), podName, metav1.GetOptions{})
+func (p *Pod) GetPodContainers(clusterName, podName, namespace string) (containers []corev1.Container, err error) {
+	pod, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Pods(namespace).Get(context.TODO(), podName, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	return pod.Spec.Containers, nil
 }
 
-func (p *Pod) StartTerminal(namespace, podName, containerName, shell string) (string, error) {
+func (p *Pod) StartTerminal(clusterName, namespace, podName, containerName, shell string) (string, error) {
 	sessionID, err := genTerminalSessionId()
 	if err != nil {
 		return "", err
@@ -136,6 +136,6 @@ func (p *Pod) StartTerminal(namespace, podName, containerName, shell string) (st
 
 	// {"Op":"bind","SessionID":"db1888b4dd29e3c61540c56a5f7cfc22"}
 	// {"Op":"stdin","Data":"ls\r","Cols":164,"Rows":41}
-	go WaitForTerminal(namespace, podName, containerName, shell, sessionID)
+	go WaitForTerminal(clusterName, namespace, podName, containerName, shell, sessionID)
 	return sessionID, err
 }

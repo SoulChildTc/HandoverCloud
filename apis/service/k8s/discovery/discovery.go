@@ -9,9 +9,9 @@ type Discovery struct{}
 
 // GetResourceByGV
 // params: gv example "traefik.containo.us/v1alpha1"
-func (d *Discovery) GetResourceByGV(gv string) (resources []metav1.APIResource) {
+func (d *Discovery) GetResourceByGV(clusterName, gv string) (resources []metav1.APIResource) {
 
-	_, apiResourceList, _ := global.K8s.CacheDiscovery.ServerGroupsAndResources()
+	_, apiResourceList, _ := global.K8s.Use(clusterName).CacheDiscovery.ServerGroupsAndResources()
 
 	for _, apiResourceList := range apiResourceList {
 		// apiResourceList包含一个gv + n个apiResource

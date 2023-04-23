@@ -29,16 +29,16 @@ func (n *Namespace) fromCells(cells []k8s.DataCell) []corev1.Namespace {
 	return namespaces
 }
 
-func (n *Namespace) GetNamespaceByName(name string) (*corev1.Namespace, error) {
-	namespace, err := global.K8s.ClientSet.CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
+func (n *Namespace) GetNamespaceByName(clusterName, name string) (*corev1.Namespace, error) {
+	namespace, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	return namespace, nil
 }
 
-func (n *Namespace) GetNamespaceList(filterName string, limit, page int) (*httputil.PageResp, error) {
-	namespaces, err := global.K8s.ClientSet.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{})
+func (n *Namespace) GetNamespaceList(clusterName, filterName string, limit, page int) (*httputil.PageResp, error) {
+	namespaces, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -66,15 +66,15 @@ func (n *Namespace) GetNamespaceList(filterName string, limit, page int) (*httpu
 	}, nil
 }
 
-func (n *Namespace) DeleteNamespaceByName(namespace string) (err error) {
-	err = global.K8s.ClientSet.CoreV1().Namespaces().Delete(context.TODO(), namespace, metav1.DeleteOptions{})
+func (n *Namespace) DeleteNamespaceByName(clusterName, namespace string) (err error) {
+	err = global.K8s.Use(clusterName).ClientSet.CoreV1().Namespaces().Delete(context.TODO(), namespace, metav1.DeleteOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (n *Namespace) CreateNamespace(content string) error {
+func (n *Namespace) CreateNamespace(clusterName, content string) error {
 	ns := &corev1.Namespace{}
 	err := json.Unmarshal([]byte(content), ns)
 	if err != nil {
@@ -87,7 +87,7 @@ func (n *Namespace) CreateNamespace(content string) error {
 		ns.Annotations = map[string]string{"created-by": global.K8sManager}
 	}
 
-	_, err = global.K8s.ClientSet.CoreV1().Namespaces().Create(context.TODO(), ns, metav1.CreateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Namespaces().Create(context.TODO(), ns, metav1.CreateOptions{})
 	if err != nil {
 		return errors.New("创建namespace失败," + err.Error())
 	}

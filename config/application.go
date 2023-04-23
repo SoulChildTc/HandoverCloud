@@ -10,4 +10,5 @@ type Configuration struct {
 	Database   Database `yaml:"database" mapstructure:"database"`
 	Jwt        Jwt      `yaml:"jwt" mapstructure:"jwt"`
 	KubeConfig string   `yaml:"kubeConfig" mapstructure:"kubeConfig"`
+	InCluster  bool     `yaml:"inCluster" mapstructure:"inCluster"`
 }

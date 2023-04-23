@@ -15,20 +15,23 @@ import (
 //	@tags			K8s,Secret
 //	@summary		获取Secret信息
 //	@produce		json
+//	@param			clusterName		path	string					true	"Cluster Name"
 //	@param			secretName		path	string					true	"Secret名称"
 //	@param			namespace		path	string					true	"Namespace"
 //	@Param			Authorization	header	string					true	"Authorization token"
 //	@success		200				object	httputil.ResponseBody	"成功返回Secret信息"
-//	@router			/api/v1/k8s/secret/{namespace}/{secretName} [get]
+//	@router			/api/v1/k8s/{clusterName}/secret/{namespace}/{secretName} [get]
 func GetSecretByName(c *gin.Context) {
-	name := c.Param("secretName")
-	namespace := c.Param("namespace")
-	if name == "" || namespace == "" {
-		httputil.Error(c, "secret名和名称空间不能为空")
+	if err := httputil.CheckParams(c, "clusterName", "namespace", "secretName"); err != nil {
+		httputil.Error(c, err.Error())
 		return
 	}
 
-	secret, err := service.K8sSecret.GetSecretByName(name, namespace)
+	clusterName := c.Param("clusterName")
+	name := c.Param("secretName")
+	namespace := c.Param("namespace")
+
+	secret, err := service.K8sSecret.GetSecretByName(clusterName, name, namespace)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -44,15 +47,23 @@ func GetSecretByName(c *gin.Context) {
 //	@tags			K8s,Secret
 //	@summary		获取Secret列表
 //	@produce		json
+//	@param			clusterName		path	string						true	"Cluster Name"
 //	@param			namespace		path	string						false	"Namespace 不填为全部"
 //	@Param			Authorization	header	string						true	"Authorization token"
 //	@Param			filter			query	string						false	"根据Secret名字模糊查询"
 //	@Param			limit			query	string						false	"一页获取多少条数据,默认十条"
 //	@Param			page			query	string						false	"获取第几页的数据,默认第一页"
 //	@success		200				object	httputil.PageResponseBody	"成功返回Secret列表"
-//	@router			/api/v1/k8s/secret/{namespace} [get]
+//	@router			/api/v1/k8s/{clusterName}/secret/{namespace} [get]
 func GetSecretList(c *gin.Context) {
+	if err := httputil.CheckParams(c, "clusterName", "namespace"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
 	namespace := c.Param("namespace")
+
 	params := new(struct {
 		FilterName string `form:"filter"`
 		Limit      int    `form:"limit,default=10"`
@@ -64,7 +75,7 @@ func GetSecretList(c *gin.Context) {
 		return
 	}
 
-	secrets, err := service.K8sSecret.GetSecretList(params.FilterName, namespace, params.Limit, params.Page)
+	secrets, err := service.K8sSecret.GetSecretList(clusterName, params.FilterName, namespace, params.Limit, params.Page)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -80,20 +91,23 @@ func GetSecretList(c *gin.Context) {
 //	@tags			K8s,Secret
 //	@summary		删除Secret
 //	@produce		json
+//	@param			clusterName		path	string	true	"Cluster Name"
 //	@param			secretName		path	string	true	"Secret名称"
 //	@param			namespace		path	string	true	"Namespace"
 //	@Param			Authorization	header	string	true	"Authorization token"
 //	@success		200				object	nil		"成功返回"
-//	@router			/api/v1/k8s/secret/{namespace}/{secretName} [delete]
+//	@router			/api/v1/k8s/{clusterName}/secret/{namespace}/{secretName} [delete]
 func DeleteSecretByName(c *gin.Context) {
-	name := c.Param("secretName")
-	namespace := c.Param("namespace")
-	if name == "" || namespace == "" {
-		httputil.Error(c, "secret名和名称空间不能为空")
+	if err := httputil.CheckParams(c, "clusterName", "namespace", "secretName"); err != nil {
+		httputil.Error(c, err.Error())
 		return
 	}
 
-	_, err := service.K8sSecret.GetSecretByName(name, namespace)
+	clusterName := c.Param("clusterName")
+	name := c.Param("secretName")
+	namespace := c.Param("namespace")
+
+	_, err := service.K8sSecret.GetSecretByName(clusterName, name, namespace)
 	if err != nil {
 		switch {
 		case errors.IsNotFound(err):
@@ -104,7 +118,7 @@ func DeleteSecretByName(c *gin.Context) {
 		return
 	}
 
-	err = service.K8sSecret.DeleteSecretByName(name, namespace)
+	err = service.K8sSecret.DeleteSecretByName(clusterName, name, namespace)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -120,13 +134,21 @@ func DeleteSecretByName(c *gin.Context) {
 //	@tags			K8s,Secret
 //	@summary		创建 Opaque 类型的 Secret
 //	@produce		json
+//	@param			clusterName	path	string	true	"Cluster Name"
 //	@produce		json
+//	@param			clusterName		path	string					true	"Cluster Name"
 //	@Param			Authorization	header	string					true	"Authorization token"
 //	@param			data			body	dto.K8sSecretCreate		true	"K8sSecretCreate 对象"
 //	@success		200				object	httputil.ResponseBody	"成功返回"
-//	@router			/api/v1/k8s/secret/ [post]
+//	@router			/api/v1/k8s/{clusterName}/secret/ [post]
 func CreateSecret(c *gin.Context) {
-	// 初始化默认值
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
+
 	secret := dto.K8sSecretCreate{}
 
 	if err := c.ShouldBindJSON(&secret); err != nil {
@@ -134,7 +156,7 @@ func CreateSecret(c *gin.Context) {
 		return
 	}
 
-	err := service.K8sSecret.CreateSecret(&secret)
+	err := service.K8sSecret.CreateSecret(clusterName, &secret)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -150,13 +172,21 @@ func CreateSecret(c *gin.Context) {
 //	@tags			K8s,Secret
 //	@summary		更新 Opaque 类型的 Secret
 //	@produce		json
+//	@param			clusterName	path	string	true	"Cluster Name"
 //	@produce		json
+//	@param			clusterName		path	string					true	"Cluster Name"
 //	@Param			Authorization	header	string					true	"Authorization token"
 //	@param			data			body	dto.K8sSecretCreate		true	"K8sSecretCreate 对象"
 //	@success		200				object	httputil.ResponseBody	"成功返回"
-//	@router			/api/v1/k8s/secret/ [put]
+//	@router			/api/v1/k8s/{clusterName}/secret/ [put]
 func UpdateSecret(c *gin.Context) {
-	// 初始化默认值
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
+
 	secret := dto.K8sSecretCreate{}
 
 	if err := c.ShouldBindJSON(&secret); err != nil {
@@ -164,7 +194,7 @@ func UpdateSecret(c *gin.Context) {
 		return
 	}
 
-	err := service.K8sSecret.UpdateSecret(&secret)
+	err := service.K8sSecret.UpdateSecret(clusterName, &secret)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -180,13 +210,21 @@ func UpdateSecret(c *gin.Context) {
 //	@tags			K8s,Secret
 //	@summary		创建 docker-registry 类型的 Secret
 //	@produce		json
+//	@param			clusterName	path	string	true	"Cluster Name"
 //	@produce		json
+//	@param			clusterName		path	string									true	"Cluster Name"
 //	@Param			Authorization	header	string									true	"Authorization token"
 //	@param			data			body	dto.K8sSecretForDockerRegistryCreate	true	"K8sSecretForDockerRegistryCreate 对象"
 //	@success		200				object	httputil.ResponseBody					"成功返回"
-//	@router			/api/v1/k8s/secret/_docker-registry [post]
+//	@router			/api/v1/k8s/{clusterName}/secret/_docker-registry [post]
 func CreateSecretForDockerRegistry(c *gin.Context) {
-	// 初始化默认值
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
+
 	secret := dto.K8sSecretForDockerRegistryCreate{}
 
 	if err := c.ShouldBindJSON(&secret); err != nil {
@@ -194,7 +232,7 @@ func CreateSecretForDockerRegistry(c *gin.Context) {
 		return
 	}
 
-	err := service.K8sSecret.CreateSecretForDockerRegistry(&secret)
+	err := service.K8sSecret.CreateSecretForDockerRegistry(clusterName, &secret)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -210,13 +248,20 @@ func CreateSecretForDockerRegistry(c *gin.Context) {
 //	@tags			K8s,Secret
 //	@summary		更新 docker-registry 类型的 Secret
 //	@produce		json
+//	@param			clusterName	path	string	true	"Cluster Name"
 //	@produce		json
+//	@param			clusterName		path	string									true	"Cluster Name"
 //	@Param			Authorization	header	string									true	"Authorization token"
 //	@param			data			body	dto.K8sSecretForDockerRegistryCreate	true	"K8sSecretForDockerRegistryCreate 对象"
 //	@success		200				object	httputil.ResponseBody					"成功返回"
-//	@router			/api/v1/k8s/secret/_docker-registry [put]
+//	@router			/api/v1/k8s/{clusterName}/secret/_docker-registry [put]
 func UpdateSecretForDockerRegistry(c *gin.Context) {
-	// 初始化默认值
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
 	secret := dto.K8sSecretForDockerRegistryCreate{}
 
 	if err := c.ShouldBindJSON(&secret); err != nil {
@@ -224,7 +269,7 @@ func UpdateSecretForDockerRegistry(c *gin.Context) {
 		return
 	}
 
-	err := service.K8sSecret.UpdateSecretForDockerRegistry(&secret)
+	err := service.K8sSecret.UpdateSecretForDockerRegistry(clusterName, &secret)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -240,13 +285,21 @@ func UpdateSecretForDockerRegistry(c *gin.Context) {
 //	@tags			K8s,Secret
 //	@summary		创建 tls 类型的 Secret
 //	@produce		json
+//	@param			clusterName	path	string	true	"Cluster Name"
 //	@produce		json
+//	@param			clusterName		path	string						true	"Cluster Name"
 //	@Param			Authorization	header	string						true	"Authorization token"
 //	@param			data			body	dto.K8sSecretForTlsCreate	true	"K8sSecretForTlsCreate 对象"
 //	@success		200				object	httputil.ResponseBody		"成功返回"
-//	@router			/api/v1/k8s/secret/_tls [post]
+//	@router			/api/v1/k8s/{clusterName}/secret/_tls [post]
 func CreateSecretForTls(c *gin.Context) {
-	// 初始化默认值
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
+
 	secret := dto.K8sSecretForTlsCreate{}
 
 	if err := c.ShouldBindJSON(&secret); err != nil {
@@ -254,7 +307,7 @@ func CreateSecretForTls(c *gin.Context) {
 		return
 	}
 
-	err := service.K8sSecret.CreateSecretForTls(&secret)
+	err := service.K8sSecret.CreateSecretForTls(clusterName, &secret)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -270,13 +323,21 @@ func CreateSecretForTls(c *gin.Context) {
 //	@tags			K8s,Secret
 //	@summary		更新 tls 类型的 Secret
 //	@produce		json
+//	@param			clusterName	path	string	true	"Cluster Name"
 //	@produce		json
+//	@param			clusterName		path	string						true	"Cluster Name"
 //	@Param			Authorization	header	string						true	"Authorization token"
 //	@param			data			body	dto.K8sSecretForTlsCreate	true	"K8sSecretForTlsCreate 对象"
 //	@success		200				object	httputil.ResponseBody		"成功返回"
-//	@router			/api/v1/k8s/secret/_tls [put]
+//	@router			/api/v1/k8s/{clusterName}/secret/_tls [put]
 func UpdateSecretForTls(c *gin.Context) {
-	// 初始化默认值
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
+
 	secret := dto.K8sSecretForTlsCreate{}
 
 	if err := c.ShouldBindJSON(&secret); err != nil {
@@ -284,7 +345,7 @@ func UpdateSecretForTls(c *gin.Context) {
 		return
 	}
 
-	err := service.K8sSecret.UpdateSecretForTls(&secret)
+	err := service.K8sSecret.UpdateSecretForTls(clusterName, &secret)
 
 	if err != nil {
 		httputil.Error(c, err.Error())

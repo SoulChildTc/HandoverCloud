@@ -30,16 +30,16 @@ func (s *Svc) fromCells(cells []k8s.DataCell) []corev1.Service {
 	return services
 }
 
-func (s *Svc) GetSvcByName(name, namespace string) (*corev1.Service, error) {
-	svc, err := global.K8s.ClientSet.CoreV1().Services(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+func (s *Svc) GetSvcByName(clusterName, name, namespace string) (*corev1.Service, error) {
+	svc, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Services(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	return svc, nil
 }
 
-func (s *Svc) GetSvcList(filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
-	services, err := global.K8s.ClientSet.CoreV1().Services(namespace).List(context.TODO(), metav1.ListOptions{})
+func (s *Svc) GetSvcList(clusterName, filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
+	services, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Services(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -68,29 +68,29 @@ func (s *Svc) GetSvcList(filterName, namespace string, limit, page int) (*httput
 	}, nil
 }
 
-func (s *Svc) DeleteSvcByName(name, namespace string) (err error) {
-	err = global.K8s.ClientSet.CoreV1().Services(namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
+func (s *Svc) DeleteSvcByName(clusterName, name, namespace string) (err error) {
+	err = global.K8s.Use(clusterName).ClientSet.CoreV1().Services(namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *Svc) CreateSimpleSvc(svcSimpleCreate *dto.K8sSvcSimpleCreate) (err error) {
-	svc, err := s.simpleSvcToService(svcSimpleCreate)
-	_, err = global.K8s.ClientSet.CoreV1().Services(svc.Namespace).Create(context.TODO(), svc, metav1.CreateOptions{})
+func (s *Svc) CreateSimpleSvc(clusterName string, svcSimpleCreate *dto.K8sSvcSimpleCreate) (err error) {
+	svc, err := s.simpleSvcToService(clusterName, svcSimpleCreate)
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Services(svc.Namespace).Create(context.TODO(), svc, metav1.CreateOptions{})
 	if err != nil {
 		return err
 	}
 	return
 }
 
-func (s *Svc) UpdateSimpleSvc(svcSimpleCreate *dto.K8sSvcSimpleCreate) (err error) {
-	svc, err := s.simpleSvcToService(svcSimpleCreate)
+func (s *Svc) UpdateSimpleSvc(clusterName string, svcSimpleCreate *dto.K8sSvcSimpleCreate) (err error) {
+	svc, err := s.simpleSvcToService(clusterName, svcSimpleCreate)
 	if err != nil {
 		return err
 	}
-	_, err = global.K8s.ClientSet.CoreV1().Services(svc.Namespace).Update(context.TODO(), svc, metav1.UpdateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Services(svc.Namespace).Update(context.TODO(), svc, metav1.UpdateOptions{})
 	if err != nil {
 		return err
 	}
@@ -98,12 +98,12 @@ func (s *Svc) UpdateSimpleSvc(svcSimpleCreate *dto.K8sSvcSimpleCreate) (err erro
 	return
 }
 
-func (s *Svc) simpleSvcToService(svcSimpleCreate *dto.K8sSvcSimpleCreate) (*corev1.Service, error) {
+func (s *Svc) simpleSvcToService(clusterName string, svcSimpleCreate *dto.K8sSvcSimpleCreate) (*corev1.Service, error) {
 	svcSimpleCreate.Type = "ClusterIP"
 
 	if svcSimpleCreate.DeploymentName != "" {
 		d := deployment.Deployment{}
-		deploy, err := d.GetDeploymentByName(svcSimpleCreate.DeploymentName, svcSimpleCreate.Namespace)
+		deploy, err := d.GetDeploymentByName(clusterName, svcSimpleCreate.DeploymentName, svcSimpleCreate.Namespace)
 		if err != nil {
 			return nil, err
 		}

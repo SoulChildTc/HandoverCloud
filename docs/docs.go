@@ -18,7 +18,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/k8s/deployment": {
+        "/api/v1/k8s/{clusterName}/deployment": {
             "put": {
                 "description": "使用原生 deployment api 对象更新",
                 "produces": [
@@ -30,6 +30,13 @@ const docTemplate = `{
                 ],
                 "summary": "使用原生 deployment api 对象更新",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Deployment Api Object",
                         "name": "deploymentName",
@@ -50,7 +57,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/api/v1/k8s/deployment/": {
+        "/api/v1/k8s/{clusterName}/deployment/": {
             "post": {
                 "description": "创建 Deployment",
                 "consumes": [
@@ -65,6 +72,13 @@ const docTemplate = `{
                 ],
                 "summary": "创建 Deployment",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Authorization token",
@@ -92,7 +106,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/deployment/{namespace}": {
+        "/api/v1/k8s/{clusterName}/deployment/{namespace}": {
             "get": {
                 "description": "获取Deployment列表",
                 "produces": [
@@ -104,6 +118,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Deployment列表",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Namespace 不填为全部",
@@ -146,7 +167,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/deployment/{namespace}/{deploymentName}": {
+        "/api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}": {
             "get": {
                 "description": "获取Deployment信息",
                 "produces": [
@@ -158,6 +179,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Deployment信息",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "deployment名称",
@@ -202,6 +230,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "deployment名称",
                         "name": "deploymentName",
                         "in": "path",
@@ -238,7 +273,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/deployment/{namespace}/{deploymentName}/image": {
+        "/api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}/image": {
             "put": {
                 "description": "修改 Deployment 容器镜像",
                 "produces": [
@@ -250,6 +285,13 @@ const docTemplate = `{
                 ],
                 "summary": "修改 Deployment 容器镜像",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Deployment名称",
@@ -298,7 +340,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/api/v1/k8s/deployment/{namespace}/{deploymentName}/pods": {
+        "/api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}/pods": {
             "get": {
                 "description": "获取 Deployment 管理的 Pod 信息",
                 "produces": [
@@ -312,6 +354,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Deployment名称",
                         "name": "deploymentName",
                         "in": "path",
@@ -335,7 +384,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/api/v1/k8s/deployment/{namespace}/{deploymentName}/restart": {
+        "/api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}/restart": {
             "put": {
                 "description": "重启 Deployment 管理的 Pod",
                 "produces": [
@@ -349,6 +398,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Deployment名称",
                         "name": "deploymentName",
                         "in": "path",
@@ -372,7 +428,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/api/v1/k8s/deployment/{namespace}/{deploymentName}/scale": {
+        "/api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}/scale": {
             "put": {
                 "description": "修改 Deployment 副本数",
                 "produces": [
@@ -384,6 +440,13 @@ const docTemplate = `{
                 ],
                 "summary": "修改 Deployment 副本数",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Deployment名称",
@@ -418,7 +481,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/api/v1/k8s/ingress/": {
+        "/api/v1/k8s/{clusterName}/ingress/": {
             "put": {
                 "description": "更新简单 Ingress",
                 "produces": [
@@ -431,6 +494,20 @@ const docTemplate = `{
                 ],
                 "summary": "更新简单 Ingress",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Authorization token",
@@ -471,6 +548,20 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Authorization token",
                         "name": "Authorization",
                         "in": "header",
@@ -496,7 +587,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/ingress/{namespace}": {
+        "/api/v1/k8s/{clusterName}/ingress/{namespace}": {
             "get": {
                 "description": "获取 Ingress 列表",
                 "produces": [
@@ -508,6 +599,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取 Ingress 列表",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Namespace 不填为全部",
@@ -550,7 +648,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/ingress/{namespace}/{ingressName}": {
+        "/api/v1/k8s/{clusterName}/ingress/{namespace}/{ingressName}": {
             "get": {
                 "description": "获取 Ingress 信息",
                 "produces": [
@@ -562,6 +660,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取 Ingress 信息",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "ingress名称",
@@ -606,6 +711,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Ingress名称",
                         "name": "ingressName",
                         "in": "path",
@@ -633,7 +745,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/namespace/": {
+        "/api/v1/k8s/{clusterName}/namespace/": {
             "get": {
                 "description": "获取 Namespace 列表",
                 "produces": [
@@ -644,6 +756,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取 Namespace 列表",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Authorization token",
@@ -695,6 +814,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Authorization token",
                         "name": "Authorization",
                         "in": "header",
@@ -720,7 +846,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/namespace/{namespaceName}": {
+        "/api/v1/k8s/{clusterName}/namespace/{namespaceName}": {
             "get": {
                 "description": "获取 Namespace 信息",
                 "produces": [
@@ -732,6 +858,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取 Namespace 信息",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Namespace名称",
@@ -757,7 +890,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/namespace/{namespaceName}/": {
+        "/api/v1/k8s/{clusterName}/namespace/{namespaceName}/": {
             "delete": {
                 "description": "删除Namespace",
                 "produces": [
@@ -768,6 +901,13 @@ const docTemplate = `{
                 ],
                 "summary": "删除Namespace",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Namespace名称",
@@ -797,7 +937,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/pod/{namespace}": {
+        "/api/v1/k8s/{clusterName}/pod/{namespace}": {
             "get": {
                 "description": "获取Pod列表",
                 "produces": [
@@ -809,6 +949,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Pod列表",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Namespace 不填为全部",
@@ -851,7 +998,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/pod/{namespace}/{podName}": {
+        "/api/v1/k8s/{clusterName}/pod/{namespace}/{podName}": {
             "get": {
                 "description": "获取Pod信息",
                 "produces": [
@@ -863,6 +1010,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Pod信息",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Pod名称",
@@ -907,6 +1061,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Pod名称",
                         "name": "podName",
                         "in": "path",
@@ -934,7 +1095,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/pod/{namespace}/{podName}/containers": {
+        "/api/v1/k8s/{clusterName}/pod/{namespace}/{podName}/containers": {
             "get": {
                 "description": "获取Pod容器信息",
                 "produces": [
@@ -946,6 +1107,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Pod容器信息",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Pod名称",
@@ -971,7 +1139,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/api/v1/k8s/pod/{namespace}/{podName}/exec": {
+        "/api/v1/k8s/{clusterName}/pod/{namespace}/{podName}/exec": {
             "get": {
                 "description": "获取 exec sessionId",
                 "produces": [
@@ -983,6 +1151,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取 exec sessionId",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Pod名称",
@@ -1024,7 +1199,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/pod/{namespace}/{podName}/log": {
+        "/api/v1/k8s/{clusterName}/pod/{namespace}/{podName}/log": {
             "get": {
                 "description": "获取Pod日志",
                 "produces": [
@@ -1036,6 +1211,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Pod日志",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Pod名称",
@@ -1077,7 +1259,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/secret/": {
+        "/api/v1/k8s/{clusterName}/secret/": {
             "put": {
                 "description": "更新 Opaque 类型的 Secret",
                 "produces": [
@@ -1090,6 +1272,20 @@ const docTemplate = `{
                 ],
                 "summary": "更新 Opaque 类型的 Secret",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Authorization token",
@@ -1130,6 +1326,20 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Authorization token",
                         "name": "Authorization",
                         "in": "header",
@@ -1155,7 +1365,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/secret/_docker-registry": {
+        "/api/v1/k8s/{clusterName}/secret/_docker-registry": {
             "put": {
                 "description": "更新 docker-registry 类型的 Secret",
                 "produces": [
@@ -1168,6 +1378,20 @@ const docTemplate = `{
                 ],
                 "summary": "更新 docker-registry 类型的 Secret",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Authorization token",
@@ -1208,6 +1432,20 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Authorization token",
                         "name": "Authorization",
                         "in": "header",
@@ -1233,7 +1471,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/secret/_tls": {
+        "/api/v1/k8s/{clusterName}/secret/_tls": {
             "put": {
                 "description": "更新 tls 类型的 Secret",
                 "produces": [
@@ -1246,6 +1484,20 @@ const docTemplate = `{
                 ],
                 "summary": "更新 tls 类型的 Secret",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Authorization token",
@@ -1286,6 +1538,20 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Authorization token",
                         "name": "Authorization",
                         "in": "header",
@@ -1311,7 +1577,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/secret/{namespace}": {
+        "/api/v1/k8s/{clusterName}/secret/{namespace}": {
             "get": {
                 "description": "获取Secret列表",
                 "produces": [
@@ -1323,6 +1589,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Secret列表",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Namespace 不填为全部",
@@ -1365,7 +1638,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/secret/{namespace}/{secretName}": {
+        "/api/v1/k8s/{clusterName}/secret/{namespace}/{secretName}": {
             "get": {
                 "description": "获取Secret信息",
                 "produces": [
@@ -1377,6 +1650,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Secret信息",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Secret名称",
@@ -1421,6 +1701,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Secret名称",
                         "name": "secretName",
                         "in": "path",
@@ -1448,7 +1735,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/svc/": {
+        "/api/v1/k8s/{clusterName}/svc/": {
             "put": {
                 "description": "更新简单 Svc",
                 "produces": [
@@ -1461,6 +1748,20 @@ const docTemplate = `{
                 ],
                 "summary": "更新简单 Svc",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Authorization token",
@@ -1501,6 +1802,20 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Authorization token",
                         "name": "Authorization",
                         "in": "header",
@@ -1526,7 +1841,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/svc/{namespace}": {
+        "/api/v1/k8s/{clusterName}/svc/{namespace}": {
             "get": {
                 "description": "获取Svc列表",
                 "produces": [
@@ -1538,6 +1853,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Svc列表",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Namespace 不填为全部",
@@ -1580,7 +1902,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/k8s/svc/{namespace}/{svcName}": {
+        "/api/v1/k8s/{clusterName}/svc/{namespace}/{svcName}": {
             "get": {
                 "description": "获取Svc信息",
                 "produces": [
@@ -1592,6 +1914,13 @@ const docTemplate = `{
                 ],
                 "summary": "获取Svc信息",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Svc名称",
@@ -1634,6 +1963,13 @@ const docTemplate = `{
                 ],
                 "summary": "删除Svc",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Svc名称",

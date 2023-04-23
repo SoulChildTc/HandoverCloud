@@ -17,7 +17,8 @@ func LoadConfig() *viper.Viper {
 	pflag.StringP("config", "c", "app-dev.yaml", `配置文件路径`)
 	pflag.Lookup("config").DefValue = "[./app-dev.yaml, ./config/app-dev.yaml]"
 	pflag.BoolP("migrate", "m", false, `迁移数据库`)
-	pflag.StringP("kubeconfig", "k", "", `kubeconfig path, default in k8s cluster`)
+	pflag.StringP("kubeconfig", "k", "", `kubeconfig path`)
+	pflag.BoolP("inCluster", "i", false, `application run in the kubernetes cluster`)
 
 	pflag.Parse()
 

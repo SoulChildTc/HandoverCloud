@@ -11,8 +11,6 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	"soul/global"
-	log "soul/internal/logger"
 	"time"
 )
 
@@ -55,40 +53,51 @@ func (c *ClusterMap) Update(clusterName string, client *Client) error {
 	return nil
 }
 
-// InitClient 初始化所有集群Client
-func InitClient() *ClusterMap {
-	// 初始化静态集群 - 配置文件指定的
-	NewClientWithKubeConfig()
+// List 列出所有集群名称
+func (c *ClusterMap) List() (clusterList []string) {
+	for name, _ := range c.Clusters {
+		clusterList = append(clusterList, name)
+	}
+	return
+}
 
-	// 初始化mysql中的集群
+// InitClient 初始化所有集群Client
+func InitClient(configPath string, inCluster bool) *ClusterMap {
+	// 初始化静态集群 - kubeconfig + in cluster
+	err := NewClientWithKubeConfigOrInCluster(configPath, inCluster)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	// TODO 初始化mysql中的集群
 	//for index, _ := range "aa" {
 	//}
 
 	return clusters
 }
 
-func NewClientWithKubeConfig() {
-	var (
-		err error
-	)
+func NewClientWithKubeConfigOrInCluster(configPath string, inCluster bool) error {
 
-	if global.Config.KubeConfig == "" {
+	if inCluster {
 		fmt.Println("[Init] In Kubernetes Cluster Running...")
 		config, err := rest.InClusterConfig()
 		if err != nil {
-			panic("[Init] Kubernetes config create failed." + err.Error())
+			return errors.New("[Init] Kubernetes config create failed." + err.Error())
 		}
 
 		err = clusters.Add("inCluster", newClientWithRestConfig(config))
 		if err != nil {
-			panic("[Init] Add Cluster failed." + err.Error())
+			return errors.New("[Init] Add Cluster failed." + err.Error())
 		}
 	}
 
+	if configPath == "" {
+		return nil
+	}
 	// 加载KUBECONFIG
-	config, err := clientcmd.LoadFromFile(global.Config.KubeConfig)
+	config, err := clientcmd.LoadFromFile(configPath)
 	if err != nil {
-		panic("[Init] Load kubeconfig failed." + err.Error())
+		return errors.New("[Init] Load kubeconfig failed." + err.Error())
 	}
 
 	// 遍历上下文
@@ -106,21 +115,20 @@ func NewClientWithKubeConfig() {
 			},
 		}).ClientConfig()
 		if err != nil {
-			panic("[Init] Kubernetes config create failed." + err.Error())
+			return errors.New("[Init] Kubernetes config create failed." + err.Error())
 		}
 
-		// 集群名称命名为 集群名称@用户
+		// 集群名称命名为: 集群名称@用户
 		err = clusters.Add(
 			fmt.Sprintf("%s@%s", clusterName, authInfo),
 			newClientWithRestConfig(contextConfig),
 		)
-
 		if err != nil {
-			panic("[Init] Add Cluster failed." + err.Error())
+			return errors.New("[Init] Add Cluster failed." + err.Error())
 		}
 
 	}
-	log.Debug("%v", clusters)
+	return nil
 }
 
 func newClientWithRestConfig(restConf *rest.Config) *Client {

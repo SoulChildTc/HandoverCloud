@@ -212,8 +212,8 @@ func CreateAttachHandler(path string) http.Handler {
 
 // startProcess is called by handleAttach
 // Executed cmd in the container specified in request and connects it up with the ptyHandler (a session)
-func startProcess(namespace, podName, containerName string, cmd []string, ptyHandler PtyHandler) error {
-	req := global.K8s.ClientSet.CoreV1().RESTClient().Post().
+func startProcess(clusterName, namespace, podName, containerName string, cmd []string, ptyHandler PtyHandler) error {
+	req := global.K8s.Use(clusterName).ClientSet.CoreV1().RESTClient().Post().
 		Resource("pods").
 		Name(podName).
 		Namespace(namespace).
@@ -228,7 +228,7 @@ func startProcess(namespace, podName, containerName string, cmd []string, ptyHan
 		TTY:       true,
 	}, scheme.ParameterCodec)
 
-	exec, err := remotecommand.NewSPDYExecutor(global.K8s.Config, "POST", req.URL())
+	exec, err := remotecommand.NewSPDYExecutor(global.K8s.Use(clusterName).Config, "POST", req.URL())
 	if err != nil {
 		log.Error("NewSPDYExecutor: ", err.Error())
 		return err
@@ -275,7 +275,7 @@ func isValidShell(validShells []string, shell string) bool {
 
 // WaitForTerminal is called from apihandler.handleAttach as a goroutine
 // Waits for the SockJS connection to be opened by the client the session to be bound in handleTerminalSession
-func WaitForTerminal(namespace, podName, containerName, shell, sessionId string) {
+func WaitForTerminal(clusterName, namespace, podName, containerName, shell, sessionId string) {
 
 	select {
 	case <-terminalSessions.Get(sessionId).bound:
@@ -286,13 +286,13 @@ func WaitForTerminal(namespace, podName, containerName, shell, sessionId string)
 
 		if isValidShell(validShells, shell) {
 			cmd := []string{shell}
-			err = startProcess(namespace, podName, containerName, cmd, terminalSessions.Get(sessionId))
+			err = startProcess(clusterName, namespace, podName, containerName, cmd, terminalSessions.Get(sessionId))
 		} else {
 			// No shell given or it was not valid: try some shells until one succeeds or all fail
 			// FIXME: if the first shell fails then the first keyboard event is lost
 			for _, testShell := range validShells {
 				cmd := []string{testShell}
-				if err = startProcess(namespace, podName, containerName, cmd, terminalSessions.Get(sessionId)); err == nil {
+				if err = startProcess(clusterName, namespace, podName, containerName, cmd, terminalSessions.Get(sessionId)); err == nil {
 					break
 				}
 			}

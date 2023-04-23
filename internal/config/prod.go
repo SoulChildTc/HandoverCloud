@@ -7,6 +7,7 @@ func setProdDefaultParams(v *viper.Viper) {
 	v.SetDefault("listen", "0.0.0.0")
 	v.SetDefault("port", "8080")
 	v.SetDefault("env", "dev")
+	//v.SetDefault("inCluster", false) // flag中设置默认值
 	//v.SetDefault("config", "app-dev.yaml") // flag中设置默认值
 
 	// log配置

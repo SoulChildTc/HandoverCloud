@@ -37,8 +37,8 @@ func (d *Deployment) fromCells(cells []k8s.DataCell) []appsv1.Deployment {
 	return deployments
 }
 
-func (d *Deployment) GetDeploymentByName(name, namespace string) (*appsv1.Deployment, error) {
-	deployment, err := global.K8s.ClientSet.AppsV1().Deployments(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+func (d *Deployment) GetDeploymentByName(clusterName, name, namespace string) (*appsv1.Deployment, error) {
+	deployment, err := global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	// 默认解码器会删除GVK,如果需要的话得自己添加。下面是WithoutVersionDecoder.Decode的解释和代码
 	//  clearing the gvk is just a convention of a codec
 	//  kind.SetGroupVersionKind(schema.GroupVersionKind{})
@@ -56,8 +56,8 @@ func (d *Deployment) GetDeploymentByName(name, namespace string) (*appsv1.Deploy
 	return deployment, nil
 }
 
-func (d *Deployment) GetDeploymentList(filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
-	deployments, err := global.K8s.ClientSet.AppsV1().Deployments(namespace).List(context.TODO(), metav1.ListOptions{})
+func (d *Deployment) GetDeploymentList(clusterName, filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
+	deployments, err := global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -86,8 +86,8 @@ func (d *Deployment) GetDeploymentList(filterName, namespace string, limit, page
 	}, nil
 }
 
-func (d *Deployment) GetDeploymentPods(name, namespace string) (pods *corev1.PodList, err error) {
-	deployment, err := d.GetDeploymentByName(name, namespace)
+func (d *Deployment) GetDeploymentPods(clusterName, name, namespace string) (pods *corev1.PodList, err error) {
+	deployment, err := d.GetDeploymentByName(clusterName, name, namespace)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (d *Deployment) GetDeploymentPods(name, namespace string) (pods *corev1.Pod
 	// 将map转换为类似这种形式 app=client-go-deploy,name
 	selector := metav1.FormatLabelSelector(deployment.Spec.Selector)
 
-	pods, err = global.K8s.ClientSet.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{
+	pods, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{
 		LabelSelector: selector,
 	})
 
@@ -106,7 +106,7 @@ func (d *Deployment) GetDeploymentPods(name, namespace string) (pods *corev1.Pod
 	return pods, nil
 }
 
-func (d *Deployment) CreateDeployment(deploymentCreate *dto.K8sDeploymentCreate) (err error) {
+func (d *Deployment) CreateDeployment(clusterName string, deploymentCreate *dto.K8sDeploymentCreate) (err error) {
 	deploymentCreate.RevisionHistoryLimit = 10
 	deploymentCreate.Strategy.MaxUnavailable = "20%"
 	deploymentCreate.Strategy.MaxSurge = "20%"
@@ -233,7 +233,7 @@ func (d *Deployment) CreateDeployment(deploymentCreate *dto.K8sDeploymentCreate)
 		}
 	}
 
-	_, err = global.K8s.ClientSet.AppsV1().Deployments(deploymentCreate.Namespace).Create(context.TODO(), deployment, metav1.CreateOptions{
+	_, err = global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(deploymentCreate.Namespace).Create(context.TODO(), deployment, metav1.CreateOptions{
 		FieldManager: global.K8sManager,
 	})
 	if err != nil {
@@ -242,9 +242,9 @@ func (d *Deployment) CreateDeployment(deploymentCreate *dto.K8sDeploymentCreate)
 	return
 }
 
-func (d *Deployment) ScaleDeployment(deploymentName, namespace string, scaleNum int32) (err error) {
+func (d *Deployment) ScaleDeployment(clusterName, deploymentName, namespace string, scaleNum int32) (err error) {
 
-	autoScale, err := global.K8s.ClientSet.AppsV1().Deployments(namespace).GetScale(context.TODO(), deploymentName, metav1.GetOptions{})
+	autoScale, err := global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(namespace).GetScale(context.TODO(), deploymentName, metav1.GetOptions{})
 	if err != nil {
 		return err
 	}
@@ -252,7 +252,7 @@ func (d *Deployment) ScaleDeployment(deploymentName, namespace string, scaleNum 
 	// 设置副本数
 	autoScale.Spec.Replicas = scaleNum
 
-	_, err = global.K8s.ClientSet.AppsV1().Deployments(namespace).UpdateScale(context.TODO(), deploymentName, autoScale, metav1.UpdateOptions{
+	_, err = global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(namespace).UpdateScale(context.TODO(), deploymentName, autoScale, metav1.UpdateOptions{
 		FieldManager: global.K8sManager,
 	})
 	if err != nil {
@@ -262,13 +262,13 @@ func (d *Deployment) ScaleDeployment(deploymentName, namespace string, scaleNum 
 	return
 }
 
-func (d *Deployment) DeleteDeploymentByName(deploymentName, namespace string, force bool) (err error) {
+func (d *Deployment) DeleteDeploymentByName(clusterName, deploymentName, namespace string, force bool) (err error) {
 	opt := metav1.DeleteOptions{}
 	if force {
 		opt.GracePeriodSeconds = pointer.Int64(0)
 	}
 
-	err = global.K8s.ClientSet.AppsV1().Deployments(namespace).Delete(context.TODO(), deploymentName, opt)
+	err = global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(namespace).Delete(context.TODO(), deploymentName, opt)
 	if err != nil {
 		return err
 	}
@@ -276,7 +276,7 @@ func (d *Deployment) DeleteDeploymentByName(deploymentName, namespace string, fo
 	return
 }
 
-func (d *Deployment) SetDeploymentImage(deploymentName, namespace string, image dto.K8sSetImage) (err error) {
+func (d *Deployment) SetDeploymentImage(clusterName, deploymentName, namespace string, image dto.K8sSetImage) (err error) {
 	opt := metav1.PatchOptions{
 		FieldManager: global.K8sManager,
 	}
@@ -297,7 +297,7 @@ func (d *Deployment) SetDeploymentImage(deploymentName, namespace string, image 
 		data = []byte(fmt.Sprintf(`{"spec": {"template": {"spec": {"containers": %s}}}}`, image.String()))
 	}
 
-	_, err = global.K8s.ClientSet.AppsV1().Deployments(namespace).Patch(context.TODO(), deploymentName, pt, data, opt)
+	_, err = global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(namespace).Patch(context.TODO(), deploymentName, pt, data, opt)
 
 	if err != nil {
 		return err
@@ -306,7 +306,7 @@ func (d *Deployment) SetDeploymentImage(deploymentName, namespace string, image 
 	return
 }
 
-func (d *Deployment) RestartDeployment(deploymentName string, namespace string) (err error) {
+func (d *Deployment) RestartDeployment(clusterName, deploymentName string, namespace string) (err error) {
 	//deployment, err := d.GetDetail(deployName, namespace)
 	//if err != nil {
 	//	return err
@@ -324,7 +324,7 @@ func (d *Deployment) RestartDeployment(deploymentName string, namespace string) 
 	)
 	patchByte := []byte(patchData)
 
-	_, err = global.K8s.ClientSet.AppsV1().Deployments(namespace).Patch(
+	_, err = global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(namespace).Patch(
 		context.TODO(),
 		deploymentName,
 		types.StrategicMergePatchType,
@@ -338,7 +338,7 @@ func (d *Deployment) RestartDeployment(deploymentName string, namespace string) 
 	return nil
 }
 
-func (d *Deployment) UpdateK8sDeployment(content string) (err error) {
+func (d *Deployment) UpdateK8sDeployment(clusterName, content string) (err error) {
 	deploy := &appsv1.Deployment{}
 	err = json.Unmarshal([]byte(content), deploy)
 	if err != nil {
@@ -352,7 +352,7 @@ func (d *Deployment) UpdateK8sDeployment(content string) (err error) {
 	//		APIVersion: deploy.APIVersion,
 	//	},
 	//}
-	_, err = global.K8s.ClientSet.AppsV1().Deployments(deploy.Namespace).Update(context.TODO(), deploy, metav1.UpdateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.AppsV1().Deployments(deploy.Namespace).Update(context.TODO(), deploy, metav1.UpdateOptions{})
 	if err != nil {
 		return errors.New("更新Deployment失败," + err.Error())
 	}

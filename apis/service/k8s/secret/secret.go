@@ -29,16 +29,16 @@ func (s *Secret) fromCells(cells []k8s.DataCell) []corev1.Secret {
 	return secrets
 }
 
-func (s *Secret) GetSecretByName(name, namespace string) (*corev1.Secret, error) {
-	secret, err := global.K8s.ClientSet.CoreV1().Secrets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+func (s *Secret) GetSecretByName(clusterName, name, namespace string) (*corev1.Secret, error) {
+	secret, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	return secret, nil
 }
 
-func (s *Secret) GetSecretList(filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
-	secrets, err := global.K8s.ClientSet.CoreV1().Secrets(namespace).List(context.TODO(), metav1.ListOptions{})
+func (s *Secret) GetSecretList(clusterName, filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
+	secrets, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -66,15 +66,15 @@ func (s *Secret) GetSecretList(filterName, namespace string, limit, page int) (*
 	}, nil
 }
 
-func (s *Secret) DeleteSecretByName(secretName, namespace string) (err error) {
-	err = global.K8s.ClientSet.CoreV1().Secrets(namespace).Delete(context.TODO(), secretName, metav1.DeleteOptions{})
+func (s *Secret) DeleteSecretByName(clusterName, secretName, namespace string) (err error) {
+	err = global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(namespace).Delete(context.TODO(), secretName, metav1.DeleteOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *Secret) CreateSecretForDockerRegistry(secretForDockerRegistryCreate *dto.K8sSecretForDockerRegistryCreate) (err error) {
+func (s *Secret) CreateSecretForDockerRegistry(clusterName string, secretForDockerRegistryCreate *dto.K8sSecretForDockerRegistryCreate) (err error) {
 	// 格式转换
 	data := secretForDockerRegistryCreate.ToDockerconfig()
 	secretStr, err := json.Marshal(data)
@@ -93,13 +93,13 @@ func (s *Secret) CreateSecretForDockerRegistry(secretForDockerRegistryCreate *dt
 		Type:       corev1.SecretTypeDockerConfigJson,
 	}
 
-	_, err = global.K8s.ClientSet.CoreV1().Secrets(secretForDockerRegistryCreate.Namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(secretForDockerRegistryCreate.Namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (s *Secret) UpdateSecretForDockerRegistry(secretForDockerRegistryCreate *dto.K8sSecretForDockerRegistryCreate) (err error) {
+func (s *Secret) UpdateSecretForDockerRegistry(clusterName string, secretForDockerRegistryCreate *dto.K8sSecretForDockerRegistryCreate) (err error) {
 	// 格式转换
 	data := secretForDockerRegistryCreate.ToDockerconfig()
 	secretStr, err := json.Marshal(data)
@@ -118,14 +118,14 @@ func (s *Secret) UpdateSecretForDockerRegistry(secretForDockerRegistryCreate *dt
 		Type:       corev1.SecretTypeDockerConfigJson,
 	}
 
-	_, err = global.K8s.ClientSet.CoreV1().Secrets(secretForDockerRegistryCreate.Namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(secretForDockerRegistryCreate.Namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *Secret) CreateSecretForTls(secretForTlsCreate *dto.K8sSecretForTlsCreate) (err error) {
+func (s *Secret) CreateSecretForTls(clusterName string, secretForTlsCreate *dto.K8sSecretForTlsCreate) (err error) {
 	if err != nil {
 		return err
 	}
@@ -143,13 +143,13 @@ func (s *Secret) CreateSecretForTls(secretForTlsCreate *dto.K8sSecretForTlsCreat
 		Type: corev1.SecretTypeTLS,
 	}
 
-	_, err = global.K8s.ClientSet.CoreV1().Secrets(secretForTlsCreate.Namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(secretForTlsCreate.Namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (s *Secret) UpdateSecretForTls(secretForTlsCreate *dto.K8sSecretForTlsCreate) (err error) {
+func (s *Secret) UpdateSecretForTls(clusterName string, secretForTlsCreate *dto.K8sSecretForTlsCreate) (err error) {
 	if err != nil {
 		return err
 	}
@@ -167,14 +167,14 @@ func (s *Secret) UpdateSecretForTls(secretForTlsCreate *dto.K8sSecretForTlsCreat
 		Type: corev1.SecretTypeTLS,
 	}
 
-	_, err = global.K8s.ClientSet.CoreV1().Secrets(secretForTlsCreate.Namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(secretForTlsCreate.Namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *Secret) CreateSecret(secretCreate *dto.K8sSecretCreate) (err error) {
+func (s *Secret) CreateSecret(clusterName string, secretCreate *dto.K8sSecretCreate) (err error) {
 	if err != nil {
 		return err
 	}
@@ -189,13 +189,13 @@ func (s *Secret) CreateSecret(secretCreate *dto.K8sSecretCreate) (err error) {
 		Type:       corev1.SecretTypeOpaque,
 	}
 
-	_, err = global.K8s.ClientSet.CoreV1().Secrets(secretCreate.Namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(secretCreate.Namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (s *Secret) UpdateSecret(secretCreate *dto.K8sSecretCreate) (err error) {
+func (s *Secret) UpdateSecret(clusterName string, secretCreate *dto.K8sSecretCreate) (err error) {
 	if err != nil {
 		return err
 	}
@@ -210,7 +210,7 @@ func (s *Secret) UpdateSecret(secretCreate *dto.K8sSecretCreate) (err error) {
 		Type:       corev1.SecretTypeOpaque,
 	}
 
-	_, err = global.K8s.ClientSet.CoreV1().Secrets(secretCreate.Namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.CoreV1().Secrets(secretCreate.Namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
 	if err != nil {
 		return err
 	}

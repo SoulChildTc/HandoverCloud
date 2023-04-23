@@ -15,20 +15,23 @@ import (
 //	@tags			K8s,Svc
 //	@summary		获取Svc信息
 //	@produce		json
+//	@param			clusterName		path	string					true	"Cluster Name"
 //	@param			svcName			path	string					true	"Svc名称"
 //	@param			namespace		path	string					true	"Namespace"
 //	@Param			Authorization	header	string					true	"Authorization token"
 //	@success		200				object	httputil.ResponseBody	"成功返回 service 信息"
-//	@router			/api/v1/k8s/svc/{namespace}/{svcName} [get]
+//	@router			/api/v1/k8s/{clusterName}/svc/{namespace}/{svcName} [get]
 func GetSvcByName(c *gin.Context) {
-	name := c.Param("svcName")
-	namespace := c.Param("namespace")
-	if name == "" || namespace == "" {
-		httputil.Error(c, "svc名和名称空间不能为空")
+	if err := httputil.CheckParams(c, "clusterName", "namespace", "svcName"); err != nil {
+		httputil.Error(c, err.Error())
 		return
 	}
 
-	svc, err := service.K8sSvc.GetSvcByName(name, namespace)
+	clusterName := c.Param("clusterName")
+	name := c.Param("svcName")
+	namespace := c.Param("namespace")
+
+	svc, err := service.K8sSvc.GetSvcByName(clusterName, name, namespace)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -44,14 +47,21 @@ func GetSvcByName(c *gin.Context) {
 //	@tags			K8s,Svc
 //	@summary		获取Svc列表
 //	@produce		json
+//	@param			clusterName		path	string						true	"Cluster Name"
 //	@param			namespace		path	string						false	"Namespace 不填为全部"
 //	@Param			Authorization	header	string						true	"Authorization token"
 //	@Param			filter			query	string						false	"根据service名字模糊查询"
 //	@Param			limit			query	string						false	"一页获取多少条数据,默认十条"
 //	@Param			page			query	string						false	"获取第几页的数据,默认第一页"
 //	@success		200				object	httputil.PageResponseBody	"成功返回Service列表"
-//	@router			/api/v1/k8s/svc/{namespace} [get]
+//	@router			/api/v1/k8s/{clusterName}/svc/{namespace} [get]
 func GetSvcList(c *gin.Context) {
+	if err := httputil.CheckParams(c, "clusterName", "namespace"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
 	namespace := c.Param("namespace")
 	params := new(struct {
 		FilterName string `form:"filter"`
@@ -64,7 +74,7 @@ func GetSvcList(c *gin.Context) {
 		return
 	}
 
-	services, err := service.K8sSvc.GetSvcList(params.FilterName, namespace, params.Limit, params.Page)
+	services, err := service.K8sSvc.GetSvcList(clusterName, params.FilterName, namespace, params.Limit, params.Page)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -80,20 +90,23 @@ func GetSvcList(c *gin.Context) {
 //	@tags			K8s,Svc
 //	@summary		删除Svc
 //	@produce		json
+//	@param			clusterName		path	string	true	"Cluster Name"
 //	@param			svcName			path	string	true	"Svc名称"
 //	@param			namespace		path	string	true	"Namespace"
 //	@Param			Authorization	header	string	true	"Authorization token"
 //	@success		200				object	nil		"成功返回"
-//	@router			/api/v1/k8s/svc/{namespace}/{svcName} [delete]
+//	@router			/api/v1/k8s/{clusterName}/svc/{namespace}/{svcName} [delete]
 func DeleteSvcByName(c *gin.Context) {
-	name := c.Param("svcName")
-	namespace := c.Param("namespace")
-	if name == "" || namespace == "" {
-		httputil.Error(c, "svc名和名称空间不能为空")
+	if err := httputil.CheckParams(c, "clusterName", "namespace", "svcName"); err != nil {
+		httputil.Error(c, err.Error())
 		return
 	}
 
-	_, err := service.K8sSvc.GetSvcByName(name, namespace)
+	clusterName := c.Param("clusterName")
+	name := c.Param("svcName")
+	namespace := c.Param("namespace")
+
+	_, err := service.K8sSvc.GetSvcByName(clusterName, name, namespace)
 	if err != nil {
 		switch {
 		case errors.IsNotFound(err):
@@ -104,7 +117,7 @@ func DeleteSvcByName(c *gin.Context) {
 		return
 	}
 
-	err = service.K8sSvc.DeleteSvcByName(name, namespace)
+	err = service.K8sSvc.DeleteSvcByName(clusterName, name, namespace)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -120,13 +133,21 @@ func DeleteSvcByName(c *gin.Context) {
 //	@tags			K8s,Svc
 //	@summary		创建简单 Svc
 //	@produce		json
+//	@param			clusterName	path	string	true	"Cluster Name"
 //	@produce		json
+//	@param			clusterName		path	string					true	"Cluster Name"
 //	@Param			Authorization	header	string					true	"Authorization token"
 //	@param			data			body	dto.K8sSvcSimpleCreate	true	"K8sSvcSimpleCreate 对象"
 //	@success		200				object	httputil.ResponseBody	"成功返回"
-//	@router			/api/v1/k8s/svc/ [post]
+//	@router			/api/v1/k8s/{clusterName}/svc/ [post]
 func CreateSimpleSvc(c *gin.Context) {
-	// 初始化默认值
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
+
 	svc := dto.K8sSvcSimpleCreate{}
 
 	if err := c.ShouldBindJSON(&svc); err != nil {
@@ -134,7 +155,7 @@ func CreateSimpleSvc(c *gin.Context) {
 		return
 	}
 
-	err := service.K8sSvc.CreateSimpleSvc(&svc)
+	err := service.K8sSvc.CreateSimpleSvc(clusterName, &svc)
 
 	if err != nil {
 		httputil.Error(c, err.Error())
@@ -150,13 +171,20 @@ func CreateSimpleSvc(c *gin.Context) {
 //	@tags			K8s,Svc
 //	@summary		更新简单 Svc
 //	@produce		json
+//	@param			clusterName	path	string	true	"Cluster Name"
 //	@produce		json
+//	@param			clusterName		path	string					true	"Cluster Name"
 //	@Param			Authorization	header	string					true	"Authorization token"
 //	@param			data			body	dto.K8sSvcSimpleCreate	true	"K8sSvcSimpleCreate 对象"
 //	@success		200				object	httputil.ResponseBody	"成功返回"
-//	@router			/api/v1/k8s/svc/ [put]
+//	@router			/api/v1/k8s/{clusterName}/svc/ [put]
 func UpdateSimpleSvc(c *gin.Context) {
-	// 初始化默认值
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+
+	clusterName := c.Param("clusterName")
 	svc := dto.K8sSvcSimpleCreate{}
 
 	if err := c.ShouldBindJSON(&svc); err != nil {
@@ -164,7 +192,7 @@ func UpdateSimpleSvc(c *gin.Context) {
 		return
 	}
 
-	err := service.K8sSvc.UpdateSimpleSvc(&svc)
+	err := service.K8sSvc.UpdateSimpleSvc(clusterName, &svc)
 
 	if err != nil {
 		httputil.Error(c, err.Error())

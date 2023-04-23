@@ -13,7 +13,8 @@ import (
 // k8s模块路由
 
 func RegisterRoute(r *gin.RouterGroup) {
-	pod := r.Group("/pod")
+	cluster := r.Group("/:clusterName")
+	pod := cluster.Group("/pod")
 	{
 		pod.GET("/", k8spod.GetPodList)
 		pod.GET("/:namespace", k8spod.GetPodList)
@@ -24,7 +25,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 		pod.GET("/:namespace/:podName/shell", k8spod.ExecContainer)
 	}
 
-	deployment := r.Group("/deployment")
+	deployment := cluster.Group("/deployment")
 	{
 		deployment.GET("/", k8sdeployment.GetDeploymentList)
 		deployment.GET("/:namespace", k8sdeployment.GetDeploymentList)
@@ -38,7 +39,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 		deployment.POST("/", k8sdeployment.CreateDeployment)
 	}
 
-	ingress := r.Group("/ingress")
+	ingress := cluster.Group("/ingress")
 	{
 		ingress.GET("/", k8singress.GetIngressList)
 		ingress.GET("/:namespace", k8singress.GetIngressList)
@@ -48,7 +49,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 		ingress.PUT("/", k8singress.UpdateSimpleIngress)
 	}
 
-	namespace := r.Group("/namespace")
+	namespace := cluster.Group("/namespace")
 	{
 		namespace.GET("/", k8snamespace.GetNamespaceList)
 		namespace.GET("/:namespaceName", k8snamespace.GetNamespaceByName)
@@ -56,7 +57,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 		namespace.DELETE("/:namespaceName", k8snamespace.DeleteNamespaceByName)
 	}
 
-	svc := r.Group("/svc")
+	svc := cluster.Group("/svc")
 	{
 		svc.GET("/", k8ssvc.GetSvcList)
 		svc.GET("/:namespace", k8ssvc.GetSvcList)
@@ -66,7 +67,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 		svc.PUT("/", k8ssvc.UpdateSimpleSvc)
 	}
 
-	secret := r.Group("/secret")
+	secret := cluster.Group("/secret")
 	{
 		secret.GET("/", k8ssecret.GetSecretList)
 		secret.GET("/:namespace", k8ssecret.GetSecretList)

@@ -253,10 +253,15 @@ info:
   title: HandoverCloud Backend Server
   version: v0.1
 paths:
-  /api/v1/k8s/deployment:
+  /api/v1/k8s/{clusterName}/deployment:
     put:
       description: 使用原生 deployment api 对象更新
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Deployment Api Object
         in: body
         name: deploymentName
@@ -275,12 +280,17 @@ paths:
       tags:
       - K8s
       - Deployment
-  /api/v1/k8s/deployment/:
+  /api/v1/k8s/{clusterName}/deployment/:
     post:
       consumes:
       - application/json
       description: 创建 Deployment
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -303,10 +313,15 @@ paths:
       tags:
       - K8s
       - Deployment
-  /api/v1/k8s/deployment/{namespace}:
+  /api/v1/k8s/{clusterName}/deployment/{namespace}:
     get:
       description: 获取Deployment列表
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Namespace 不填为全部
         in: path
         name: namespace
@@ -339,10 +354,15 @@ paths:
       tags:
       - K8s
       - Deployment
-  /api/v1/k8s/deployment/{namespace}/{deploymentName}:
+  /api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}:
     delete:
       description: 删除 Deployment
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: deployment名称
         in: path
         name: deploymentName
@@ -376,6 +396,11 @@ paths:
     get:
       description: 获取Deployment信息
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: deployment名称
         in: path
         name: deploymentName
@@ -402,10 +427,15 @@ paths:
       tags:
       - K8s
       - Deployment
-  /api/v1/k8s/deployment/{namespace}/{deploymentName}/image:
+  /api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}/image:
     put:
       description: 修改 Deployment 容器镜像
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Deployment名称
         in: path
         name: deploymentName
@@ -443,10 +473,15 @@ paths:
       tags:
       - K8s
       - Deployment
-  /api/v1/k8s/deployment/{namespace}/{deploymentName}/pods:
+  /api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}/pods:
     get:
       description: 获取 Deployment 管理的 Pod 信息
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Deployment名称
         in: path
         name: deploymentName
@@ -469,10 +504,15 @@ paths:
       tags:
       - K8s
       - Deployment
-  /api/v1/k8s/deployment/{namespace}/{deploymentName}/restart:
+  /api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}/restart:
     put:
       description: 重启 Deployment 管理的 Pod
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Deployment名称
         in: path
         name: deploymentName
@@ -495,10 +535,15 @@ paths:
       tags:
       - K8s
       - Deployment
-  /api/v1/k8s/deployment/{namespace}/{deploymentName}/scale:
+  /api/v1/k8s/{clusterName}/deployment/{namespace}/{deploymentName}/scale:
     put:
       description: 修改 Deployment 副本数
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Deployment名称
         in: path
         name: deploymentName
@@ -527,10 +572,20 @@ paths:
       tags:
       - K8s
       - Deployment
-  /api/v1/k8s/ingress/:
+  /api/v1/k8s/{clusterName}/ingress/:
     post:
       description: 创建简单 Ingress ,仅支持一个路由前缀,支持多个Host, 对应一个Service
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -557,6 +612,16 @@ paths:
     put:
       description: 更新简单 Ingress
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -580,10 +645,15 @@ paths:
       tags:
       - K8s
       - Ingress
-  /api/v1/k8s/ingress/{namespace}:
+  /api/v1/k8s/{clusterName}/ingress/{namespace}:
     get:
       description: 获取 Ingress 列表
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Namespace 不填为全部
         in: path
         name: namespace
@@ -616,10 +686,15 @@ paths:
       tags:
       - K8s
       - Ingress
-  /api/v1/k8s/ingress/{namespace}/{ingressName}:
+  /api/v1/k8s/{clusterName}/ingress/{namespace}/{ingressName}:
     delete:
       description: 删除 Ingress
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Ingress名称
         in: path
         name: ingressName
@@ -647,6 +722,11 @@ paths:
     get:
       description: 获取 Ingress 信息
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: ingress名称
         in: path
         name: ingressName
@@ -673,10 +753,15 @@ paths:
       tags:
       - K8s
       - Ingress
-  /api/v1/k8s/namespace/:
+  /api/v1/k8s/{clusterName}/namespace/:
     get:
       description: 获取 Namespace 列表
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -709,6 +794,11 @@ paths:
       - application/json
       description: 创建 Namespace
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -731,10 +821,15 @@ paths:
       tags:
       - K8s
       - Namespace
-  /api/v1/k8s/namespace/{namespaceName}:
+  /api/v1/k8s/{clusterName}/namespace/{namespaceName}:
     get:
       description: 获取 Namespace 信息
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Namespace名称
         in: path
         name: namespaceName
@@ -756,10 +851,15 @@ paths:
       tags:
       - K8s
       - Namespace
-  /api/v1/k8s/namespace/{namespaceName}/:
+  /api/v1/k8s/{clusterName}/namespace/{namespaceName}/:
     delete:
       description: 删除Namespace
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Namespace名称
         in: path
         name: namespaceName
@@ -783,10 +883,15 @@ paths:
       summary: 删除Namespace
       tags:
       - K8s
-  /api/v1/k8s/pod/{namespace}:
+  /api/v1/k8s/{clusterName}/pod/{namespace}:
     get:
       description: 获取Pod列表
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Namespace 不填为全部
         in: path
         name: namespace
@@ -819,10 +924,15 @@ paths:
       tags:
       - K8s
       - Pod
-  /api/v1/k8s/pod/{namespace}/{podName}:
+  /api/v1/k8s/{clusterName}/pod/{namespace}/{podName}:
     delete:
       description: 删除Pod
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Pod名称
         in: path
         name: podName
@@ -850,6 +960,11 @@ paths:
     get:
       description: 获取Pod信息
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Pod名称
         in: path
         name: podName
@@ -876,10 +991,15 @@ paths:
       tags:
       - K8s
       - Pod
-  /api/v1/k8s/pod/{namespace}/{podName}/containers:
+  /api/v1/k8s/{clusterName}/pod/{namespace}/{podName}/containers:
     get:
       description: 获取Pod容器信息
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Pod名称
         in: path
         name: podName
@@ -902,10 +1022,15 @@ paths:
       tags:
       - K8s
       - Pod
-  /api/v1/k8s/pod/{namespace}/{podName}/exec:
+  /api/v1/k8s/{clusterName}/pod/{namespace}/{podName}/exec:
     get:
       description: 获取 exec sessionId
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Pod名称
         in: path
         name: podName
@@ -938,10 +1063,15 @@ paths:
       tags:
       - K8s
       - Pod
-  /api/v1/k8s/pod/{namespace}/{podName}/log:
+  /api/v1/k8s/{clusterName}/pod/{namespace}/{podName}/log:
     get:
       description: 获取Pod日志
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Pod名称
         in: path
         name: podName
@@ -974,10 +1104,20 @@ paths:
       tags:
       - K8s
       - Pod
-  /api/v1/k8s/secret/:
+  /api/v1/k8s/{clusterName}/secret/:
     post:
       description: 创建 Opaque 类型的 Secret
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -1004,6 +1144,16 @@ paths:
     put:
       description: 更新 Opaque 类型的 Secret
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -1027,10 +1177,20 @@ paths:
       tags:
       - K8s
       - Secret
-  /api/v1/k8s/secret/_docker-registry:
+  /api/v1/k8s/{clusterName}/secret/_docker-registry:
     post:
       description: 创建 docker-registry 类型的 Secret
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -1057,6 +1217,16 @@ paths:
     put:
       description: 更新 docker-registry 类型的 Secret
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -1080,10 +1250,20 @@ paths:
       tags:
       - K8s
       - Secret
-  /api/v1/k8s/secret/_tls:
+  /api/v1/k8s/{clusterName}/secret/_tls:
     post:
       description: 创建 tls 类型的 Secret
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -1110,6 +1290,16 @@ paths:
     put:
       description: 更新 tls 类型的 Secret
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -1133,10 +1323,15 @@ paths:
       tags:
       - K8s
       - Secret
-  /api/v1/k8s/secret/{namespace}:
+  /api/v1/k8s/{clusterName}/secret/{namespace}:
     get:
       description: 获取Secret列表
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Namespace 不填为全部
         in: path
         name: namespace
@@ -1169,10 +1364,15 @@ paths:
       tags:
       - K8s
       - Secret
-  /api/v1/k8s/secret/{namespace}/{secretName}:
+  /api/v1/k8s/{clusterName}/secret/{namespace}/{secretName}:
     delete:
       description: 删除Secret
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Secret名称
         in: path
         name: secretName
@@ -1200,6 +1400,11 @@ paths:
     get:
       description: 获取Secret信息
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Secret名称
         in: path
         name: secretName
@@ -1226,11 +1431,21 @@ paths:
       tags:
       - K8s
       - Secret
-  /api/v1/k8s/svc/:
+  /api/v1/k8s/{clusterName}/svc/:
     post:
       description: 创建简单 Svc, 支持通过DeploymentName 转换为 Selector, 也可以自定义Selector, 二选一。
         仅支持创建ClusterIP类型
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -1257,6 +1472,16 @@ paths:
     put:
       description: 更新简单 Svc
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Authorization token
         in: header
         name: Authorization
@@ -1280,10 +1505,15 @@ paths:
       tags:
       - K8s
       - Svc
-  /api/v1/k8s/svc/{namespace}:
+  /api/v1/k8s/{clusterName}/svc/{namespace}:
     get:
       description: 获取Svc列表
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Namespace 不填为全部
         in: path
         name: namespace
@@ -1316,10 +1546,15 @@ paths:
       tags:
       - K8s
       - Svc
-  /api/v1/k8s/svc/{namespace}/{svcName}:
+  /api/v1/k8s/{clusterName}/svc/{namespace}/{svcName}:
     delete:
       description: 删除Svc
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Svc名称
         in: path
         name: svcName
@@ -1347,6 +1582,11 @@ paths:
     get:
       description: 获取Svc信息
       parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
       - description: Svc名称
         in: path
         name: svcName

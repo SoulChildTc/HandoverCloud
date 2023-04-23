@@ -29,16 +29,16 @@ func (i *Ingress) fromCells(cells []k8s.DataCell) []ingressv1.Ingress {
 	return ingress
 }
 
-func (i *Ingress) GetIngressByName(name, namespace string) (*ingressv1.Ingress, error) {
-	ingress, err := global.K8s.ClientSet.NetworkingV1().Ingresses(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+func (i *Ingress) GetIngressByName(clusterName, name, namespace string) (*ingressv1.Ingress, error) {
+	ingress, err := global.K8s.Use(clusterName).ClientSet.NetworkingV1().Ingresses(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	return ingress, nil
 }
 
-func (i *Ingress) GetIngressList(filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
-	ingresses, err := global.K8s.ClientSet.NetworkingV1().Ingresses(namespace).List(context.TODO(), metav1.ListOptions{})
+func (i *Ingress) GetIngressList(clusterName, filterName, namespace string, limit, page int) (*httputil.PageResp, error) {
+	ingresses, err := global.K8s.Use(clusterName).ClientSet.NetworkingV1().Ingresses(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -67,18 +67,18 @@ func (i *Ingress) GetIngressList(filterName, namespace string, limit, page int) 
 	}, nil
 }
 
-func (i *Ingress) DeleteIngressByName(name, namespace string) (err error) {
-	err = global.K8s.ClientSet.NetworkingV1().Ingresses(namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
+func (i *Ingress) DeleteIngressByName(clusterName, name, namespace string) (err error) {
+	err = global.K8s.Use(clusterName).ClientSet.NetworkingV1().Ingresses(namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (i *Ingress) CreateSimpleIngress(ingressSimpleCreate *dto.K8sIngressSimpleCreate) (err error) {
+func (i *Ingress) CreateSimpleIngress(clusterName string, ingressSimpleCreate *dto.K8sIngressSimpleCreate) (err error) {
 	ing := i.simpleIngressToIngress(ingressSimpleCreate)
 
-	_, err = global.K8s.ClientSet.NetworkingV1().Ingresses(ing.Namespace).Create(context.TODO(), ing, metav1.CreateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.NetworkingV1().Ingresses(ing.Namespace).Create(context.TODO(), ing, metav1.CreateOptions{})
 	if err != nil {
 		return err
 	}
@@ -86,9 +86,9 @@ func (i *Ingress) CreateSimpleIngress(ingressSimpleCreate *dto.K8sIngressSimpleC
 	return
 }
 
-func (i *Ingress) UpdateSimpleIngress(ingressSimpleCreate *dto.K8sIngressSimpleCreate) (err error) {
+func (i *Ingress) UpdateSimpleIngress(clusterName string, ingressSimpleCreate *dto.K8sIngressSimpleCreate) (err error) {
 	ing := i.simpleIngressToIngress(ingressSimpleCreate)
-	_, err = global.K8s.ClientSet.NetworkingV1().Ingresses(ing.Namespace).Update(context.TODO(), ing, metav1.UpdateOptions{})
+	_, err = global.K8s.Use(clusterName).ClientSet.NetworkingV1().Ingresses(ing.Namespace).Update(context.TODO(), ing, metav1.UpdateOptions{})
 	if err != nil {
 		return err
 	}

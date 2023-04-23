@@ -2,6 +2,8 @@ package httputil
 
 import (
 	"errors"
+	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"regexp"
@@ -46,4 +48,13 @@ func mobileValidate(fl validator.FieldLevel) bool {
 
 	reg := regexp.MustCompile(`^1[3-9]\d{9}$`)
 	return reg.MatchString(mobile)
+}
+
+func CheckParams(c *gin.Context, params ...string) error {
+	for _, p := range params {
+		if c.Param(p) == "" {
+			return errors.New(fmt.Sprintf("%s不能为空", p))
+		}
+	}
+	return nil
 }
