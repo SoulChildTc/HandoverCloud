@@ -55,37 +55,20 @@ func (c *ClusterMap) Update(clusterName string, client *Client) error {
 
 // List 列出所有集群名称
 func (c *ClusterMap) List() (clusterList []string) {
-	for name, _ := range c.Clusters {
+	for name := range c.Clusters {
 		clusterList = append(clusterList, name)
 	}
 	return
 }
 
-// InitClient 初始化所有集群Client
-func InitClient(configPath string, inCluster bool) *ClusterMap {
-	// 初始化静态集群 - kubeconfig + in cluster
-	err := NewClientWithKubeConfigOrInCluster(configPath, inCluster)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	// TODO 初始化mysql中的集群
-	//for index, _ := range "aa" {
-	//}
-
-	return clusters
-}
-
-func NewClientWithKubeConfigOrInCluster(configPath string, inCluster bool) error {
-
+func (c *ClusterMap) AddClientWithKubeConfigOrInCluster(configPath string, inCluster bool) error {
 	if inCluster {
-		fmt.Println("[Init] In Kubernetes Cluster Running...")
 		config, err := rest.InClusterConfig()
 		if err != nil {
 			return errors.New("[Init] Kubernetes config create failed." + err.Error())
 		}
 
-		err = clusters.Add("inCluster", newClientWithRestConfig(config))
+		err = clusters.Add("in-cluster", c.NewClientWithRestConfig(config))
 		if err != nil {
 			return errors.New("[Init] Add Cluster failed." + err.Error())
 		}
@@ -118,11 +101,8 @@ func NewClientWithKubeConfigOrInCluster(configPath string, inCluster bool) error
 			return errors.New("[Init] Kubernetes config create failed." + err.Error())
 		}
 
-		// 集群名称命名为: 集群名称@用户
-		err = clusters.Add(
-			fmt.Sprintf("%s@%s", clusterName, authInfo),
-			newClientWithRestConfig(contextConfig),
-		)
+		// 集群名称命名
+		err = clusters.Add(contextName, c.NewClientWithRestConfig(contextConfig))
 		if err != nil {
 			return errors.New("[Init] Add Cluster failed." + err.Error())
 		}
@@ -131,7 +111,7 @@ func NewClientWithKubeConfigOrInCluster(configPath string, inCluster bool) error
 	return nil
 }
 
-func newClientWithRestConfig(restConf *rest.Config) *Client {
+func (c *ClusterMap) NewClientWithRestConfig(restConf *rest.Config) *Client {
 	client := &Client{
 		Config: restConf,
 	}
@@ -154,12 +134,12 @@ func newClientWithRestConfig(restConf *rest.Config) *Client {
 	}
 
 	// DiscoveryClient
-	client.CacheDiscovery = newDiscoveryClient(client.Config)
+	client.CacheDiscovery = c.newDiscoveryClient(client.Config)
 	return client
 }
 
-func newDiscoveryClient(restConf *rest.Config) (discoveryClient discovery.DiscoveryInterface) {
-	discoveryClient, err := newDiskCacheDiscoveryClient(restConf)
+func (c *ClusterMap) newDiscoveryClient(restConf *rest.Config) (discoveryClient discovery.DiscoveryInterface) {
+	discoveryClient, err := c.newDiskCacheDiscoveryClient(restConf)
 	if err != nil {
 		fmt.Println("[Init] Kubernetes DiskCacheDiscoveryClient initialization failed. Try MemCacheDiscoveryClient." + err.Error())
 	} else {
@@ -167,7 +147,7 @@ func newDiscoveryClient(restConf *rest.Config) (discoveryClient discovery.Discov
 		return
 	}
 
-	discoveryClient, err = newMemCacheDiscoveryClient(restConf)
+	discoveryClient, err = c.newMemCacheDiscoveryClient(restConf)
 	if err != nil {
 		panic("[Init] Kubernetes MemCacheDiscoveryClient initialization failed." + err.Error())
 	}
@@ -177,7 +157,7 @@ func newDiscoveryClient(restConf *rest.Config) (discoveryClient discovery.Discov
 
 }
 
-func newDiskCacheDiscoveryClient(restConf *rest.Config) (discoveryClient discovery.DiscoveryInterface, err error) {
+func (c *ClusterMap) newDiskCacheDiscoveryClient(restConf *rest.Config) (discoveryClient discovery.DiscoveryInterface, err error) {
 	// DiskCacheDiscoveryClient
 	discoveryClient, err = disk.NewCachedDiscoveryClientForConfig(
 		restConf,
@@ -188,7 +168,7 @@ func newDiskCacheDiscoveryClient(restConf *rest.Config) (discoveryClient discove
 	return
 }
 
-func newMemCacheDiscoveryClient(restConf *rest.Config) (discoveryClient discovery.DiscoveryInterface, err error) {
+func (c *ClusterMap) newMemCacheDiscoveryClient(restConf *rest.Config) (discoveryClient discovery.DiscoveryInterface, err error) {
 	// MemCacheDiscoveryClient
 	discoveryClient, err = discovery.NewDiscoveryClientForConfig(restConf)
 	if err != nil {
@@ -196,4 +176,19 @@ func newMemCacheDiscoveryClient(restConf *rest.Config) (discoveryClient discover
 	}
 	discoveryClient = memory.NewMemCacheClient(discoveryClient)
 	return
+}
+
+// InitClient 初始化所有集群Client
+func InitClient(configPath string, inCluster bool) *ClusterMap {
+	// 初始化静态集群 - kubeconfig + in cluster
+	err := clusters.AddClientWithKubeConfigOrInCluster(configPath, inCluster)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	// TODO 初始化DB中的集群
+	//for index, _ := range "aa" {
+	//}
+
+	return clusters
 }
