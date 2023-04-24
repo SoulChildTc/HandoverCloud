@@ -2,18 +2,31 @@ package k8s
 
 import (
 	"github.com/gin-gonic/gin"
+	k8scluster "soul/apis/controller/k8s/cluster"
 	k8sdeployment "soul/apis/controller/k8s/deployment"
 	k8singress "soul/apis/controller/k8s/ingress"
 	k8snamespace "soul/apis/controller/k8s/namespace"
 	k8spod "soul/apis/controller/k8s/pod"
 	k8ssecret "soul/apis/controller/k8s/secret"
 	k8ssvc "soul/apis/controller/k8s/svc"
+	"soul/middleware"
 )
 
 // k8s模块路由
 
 func RegisterRoute(r *gin.RouterGroup) {
+
+	clusterResource := r.Group("/cluster")
+	{
+		clusterResource.GET("/", k8scluster.GetClusterList)
+		clusterResource.GET("/:clusterName", k8scluster.GetClusterByName)
+		clusterResource.POST("/:clusterName", k8scluster.AddCluster)
+		clusterResource.PUT("/:clusterName", k8scluster.UpdateCluster)
+		clusterResource.DELETE("/:clusterName", k8scluster.DeleteCluster)
+	}
+
 	cluster := r.Group("/:clusterName")
+	cluster.Use(middleware.ClusterExists)
 	pod := cluster.Group("/pod")
 	{
 		pod.GET("/", k8spod.GetPodList)

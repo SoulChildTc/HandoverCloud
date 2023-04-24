@@ -1,6 +1,8 @@
 package httputil
 
 import (
+	"crypto/x509"
+	"encoding/pem"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -34,6 +36,7 @@ func ParseValidateError(err error, obj any) error {
 func RegisterAllValidator() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("mobile", mobileValidate) // 指定tag名称和处理函数
+		v.RegisterValidation("pem", pemValidate)       // 指定tag名称和处理函数
 	}
 }
 
@@ -43,11 +46,38 @@ func mobileValidate(fl validator.FieldLevel) bool {
 		if len(mobile) != 11 {
 			return false
 		}
-		return false
 	}
 
 	reg := regexp.MustCompile(`^1[3-9]\d{9}$`)
 	return reg.MatchString(mobile)
+}
+
+func pemValidate(fl validator.FieldLevel) bool {
+	data, _ := fl.Field().Interface().(string)
+	block, _ := pem.Decode([]byte(data))
+	if block == nil {
+		return false
+	}
+
+	pemType := fl.Param()
+	if pemType == "cert" {
+		_, err := x509.ParseCertificate(block.Bytes)
+		if err != nil {
+			return false
+		}
+	}
+
+	if pemType == "key" {
+		_, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+		if err != nil {
+			_, err = x509.ParsePKCS8PrivateKey(block.Bytes)
+			if err != nil {
+				return false
+			}
+		}
+	}
+
+	return true
 }
 
 func CheckParams(c *gin.Context, params ...string) error {

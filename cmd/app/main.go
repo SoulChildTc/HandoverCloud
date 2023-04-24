@@ -25,7 +25,7 @@ func init() {
 	}
 
 	// 初始化client-go
-	global.K8s = k8s.InitClient(global.Config.KubeConfig, global.Config.InCluster)
+	global.K8s = k8s.InitClient(global.DB, global.Config.KubeConfig, global.Config.InCluster)
 }
 
 func Execute() {

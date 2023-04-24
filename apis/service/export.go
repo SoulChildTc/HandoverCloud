@@ -1,6 +1,7 @@
 package service
 
 import (
+	"soul/apis/service/k8s/cluster"
 	"soul/apis/service/k8s/deployment"
 	"soul/apis/service/k8s/ingress"
 	"soul/apis/service/k8s/namespace"
@@ -18,4 +19,5 @@ var (
 	K8sNamespace  namespace.Namespace
 	K8sSvc        svc.Svc
 	K8sSecret     secret.Secret
+	K8sCluster    cluster.Cluster
 )
