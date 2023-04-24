@@ -5,6 +5,17 @@ definitions:
         example: pong
         type: string
     type: object
+  dto.K8sClusterInfo:
+    properties:
+      TLSClientConfig:
+        $ref: '#/definitions/k8s.TlsClientConfig'
+      bearerToken:
+        type: string
+      clusterName:
+        type: string
+      host:
+        type: string
+    type: object
   dto.K8sDeploymentCreate:
     properties:
       containerPort:
@@ -190,6 +201,17 @@ definitions:
     required:
     - password
     - user
+    type: object
+  k8s.TlsClientConfig:
+    properties:
+      CAData:
+        type: string
+      certData:
+        type: string
+      insecure:
+        type: boolean
+      keyData:
+        type: string
     type: object
   k8s.containerPort:
     properties:
@@ -1613,6 +1635,135 @@ paths:
       tags:
       - K8s
       - Svc
+  /api/v1/k8s/cluster/:
+    get:
+      description: 获取集群列表
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回集群列表
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 获取集群列表
+      tags:
+      - K8s
+      - Cluster
+  /api/v1/k8s/cluster/{clusterName}/:
+    delete:
+      description: 删除集群
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回集群信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 删除集群
+      tags:
+      - K8s
+      - Cluster
+    get:
+      description: 获取集群信息
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回集群信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 获取集群信息
+      tags:
+      - K8s
+      - Cluster
+    post:
+      description: 添加集群
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: 集群信息
+        in: body
+        name: clusterInfo
+        required: true
+        schema:
+          $ref: '#/definitions/dto.K8sClusterInfo'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回集群信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 添加集群
+      tags:
+      - K8s
+      - Cluster
+    put:
+      description: 更新集群
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: 集群信息
+        in: body
+        name: clusterInfo
+        required: true
+        schema:
+          $ref: '#/definitions/dto.K8sClusterInfo'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回集群信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 更新集群
+      tags:
+      - K8s
+      - Cluster
   /api/v1/system/user/info:
     get:
       description: 用户信息
