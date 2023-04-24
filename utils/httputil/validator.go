@@ -19,10 +19,10 @@ func ParseValidateError(err error, obj any) error {
 
 	var errResult []string
 	for _, e := range errs {
-		errStr, err := utils.GetTagValue(obj, e.Field(), e.Tag()+"_err")
+		errStr, err := utils.GetTagValueByNamespace(obj, e.Namespace(), e.Tag()+"_err")
 		if err != nil {
 			// 没有获取到就获取默认的msg
-			errStr, _ = utils.GetTagValue(obj, e.Field(), "msg")
+			errStr, _ = utils.GetTagValueByNamespace(obj, e.Namespace(), "msg")
 		}
 		errResult = append(errResult, errStr)
 
