@@ -54,9 +54,10 @@ func GetDeploymentByName(c *gin.Context) {
 //	@Param			limit			query	string						false	"一页获取多少条数据,默认十条"
 //	@Param			page			query	string						false	"获取第几页的数据,默认第一页"
 //	@success		200				object	httputil.PageResponseBody	"成功返回Deployment列表"
+//	@router			/api/v1/k8s/{clusterName}/deployment/ [get]
 //	@router			/api/v1/k8s/{clusterName}/deployment/{namespace} [get]
 func GetDeploymentList(c *gin.Context) {
-	if err := httputil.CheckParams(c, "clusterName", "namespace"); err != nil {
+	if err := httputil.CheckParams(c, "clusterName"); err != nil {
 		httputil.Error(c, err.Error())
 		return
 	}
