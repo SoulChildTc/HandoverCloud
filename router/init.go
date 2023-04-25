@@ -36,6 +36,7 @@ func InitRouter(r *gin.Engine) {
 	// /api/v1 - Auth
 	apiV1Auth := r.Group("/api/v1")
 	apiV1Auth.Use(middleware.JwtAuth)
+	apiV1Auth.Use(middleware.CheckPermission)
 	{
 		registerRoute(apiV1Auth, "/k8s", k8s.RegisterRoute)
 	}
