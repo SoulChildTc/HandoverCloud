@@ -14,11 +14,11 @@ func RegisterRoute(r *gin.RouterGroup) {
 	{
 		userGroup.POST("/login", user.Login)
 		userGroup.POST("/register", user.Register)
+	}
 
-		userAuthGroup := userGroup.Group("").Use(middleware.JwtAuth)
-		{
-			userAuthGroup.GET("/info", user.Info)
-		}
+	userAuthGroup := r.Group("/user").Use(middleware.JwtAuth)
+	{
+		userAuthGroup.GET("/info", user.Info)
 	}
 
 }

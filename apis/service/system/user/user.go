@@ -46,7 +46,7 @@ func (s *User) Login(user dto.SystemLogin) (map[string]any, error) {
 		return nil, errors.New("手机号或密码错误")
 	}
 
-	token, err := utils.CreateJwtToken(int(existUser.ID.ID), existUser.Username)
+	token, err := utils.CreateJwtToken(existUser.ID.ID, existUser.Username)
 	if err != nil {
 		log.Error(err.Error())
 		return nil, errors.New("生成token发生错误")

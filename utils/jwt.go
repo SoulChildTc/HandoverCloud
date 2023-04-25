@@ -13,12 +13,12 @@ var (
 )
 
 type CustomClaims struct {
-	UserID   int    `json:"user_id"`
+	UserID   uint   `json:"user_id"`
 	UserName string `json:"user_name"`
 	jwt.RegisteredClaims
 }
 
-func CreateJwtToken(userid int, username string) (string, error) {
+func CreateJwtToken(userid uint, username string) (string, error) {
 	signingKey := []byte(global.Config.Jwt.Secret)
 	ttl := global.Config.Jwt.Ttl
 	iss := global.Config.AppName
