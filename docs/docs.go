@@ -2834,6 +2834,9 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
+                "avatar": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },

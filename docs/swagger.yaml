@@ -152,6 +152,8 @@ definitions:
     type: object
   dto.SystemRegister:
     properties:
+      avatar:
+        type: string
       email:
         type: string
       mobile:
