@@ -10,7 +10,7 @@ func ClusterExists(c *gin.Context) {
 	clusterName := c.Param("clusterName")
 	_, ok := global.K8s.Clusters[clusterName]
 	if !ok {
-		httputil.Error(c, "集群名称不存在")
+		httputil.Error(c, "集群不存在")
 		c.Abort()
 		return
 	}

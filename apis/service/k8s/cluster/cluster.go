@@ -44,9 +44,30 @@ func (c *Cluster) GetClusterList() (clusterInfos []dto.K8sClusterInfo) {
 }
 
 func (c *Cluster) AddCluster(info dto.K8sClusterInfo) error {
-	if global.K8s.IsStatic(info.ClusterName) {
-		return errors.New("集群名称已存在")
+	if global.K8s.Get(info.ClusterName) != nil {
+		return errors.New("集群已存在")
 	}
+
+	// 创建reset client
+	restConf := &rest.Config{
+		Host:        info.Host,
+		BearerToken: info.BearerToken,
+		TLSClientConfig: rest.TLSClientConfig{
+			Insecure: info.TLSClientConfig.Insecure,
+			CertData: []byte(info.TLSClientConfig.CertData),
+			KeyData:  []byte(info.TLSClientConfig.KeyData),
+			CAData:   []byte(info.TLSClientConfig.CAData),
+		},
+	}
+	client, err := global.K8s.NewClientWithRestConfig(restConf)
+	if err != nil {
+		log.Error(err.Error())
+		return errors.New("创建集群失败")
+	}
+
+	_ = global.K8s.Add(info.ClusterName, client)
+
+	// 存入数据库
 	cluster := &model.K8sCluster{
 		ClusterName: info.ClusterName,
 		Host:        info.Host,
@@ -68,35 +89,20 @@ func (c *Cluster) AddCluster(info dto.K8sClusterInfo) error {
 			Valid:  true,
 		},
 	}
-	err := dao.K8sCluster.CreateCluster(cluster)
+	err = dao.K8sCluster.CreateCluster(cluster)
 	if err != nil {
 		log.Error(err.Error())
+		global.K8s.Remove(info.ClusterName)
 		return errors.New("集群创建失败")
 	}
-	restConf := &rest.Config{
-		Host:        info.Host,
-		BearerToken: info.BearerToken,
-		TLSClientConfig: rest.TLSClientConfig{
-			Insecure: info.TLSClientConfig.Insecure,
-			CertData: []byte(info.TLSClientConfig.CertData),
-			KeyData:  []byte(info.TLSClientConfig.KeyData),
-			CAData:   []byte(info.TLSClientConfig.CAData),
-		},
-	}
-	client, err := global.K8s.NewClientWithRestConfig(restConf)
-	if err != nil {
-		log.Error(err.Error())
-		return errors.New("创建集群失败")
-	}
-	err = global.K8s.Add(info.ClusterName, client)
-	if err != nil {
-		log.Error(err.Error())
-		return errors.New("创建集群失败")
-	}
+
 	return nil
 }
 
 func (c *Cluster) UpdateCluster(info dto.K8sClusterInfo) error {
+	if global.K8s.Get(info.ClusterName) == nil {
+		return errors.New("集群不存在")
+	}
 	if global.K8s.IsStatic(info.ClusterName) {
 		return errors.New("静态集群无法修改")
 	}
