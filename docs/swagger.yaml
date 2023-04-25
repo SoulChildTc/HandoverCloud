@@ -303,6 +303,46 @@ paths:
       - K8s
       - Deployment
   /api/v1/k8s/{clusterName}/deployment/:
+    get:
+      description: 获取Deployment列表
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 根据Deployment名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Deployment列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取Deployment列表
+      tags:
+      - K8s
+      - Deployment
     post:
       consumes:
       - application/json
@@ -595,6 +635,46 @@ paths:
       - K8s
       - Deployment
   /api/v1/k8s/{clusterName}/ingress/:
+    get:
+      description: 获取 Ingress 列表
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 根据 Ingress 名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 Ingress 列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取 Ingress 列表
+      tags:
+      - K8s
+      - Ingress
     post:
       description: 创建简单 Ingress ,仅支持一个路由前缀,支持多个Host, 对应一个Service
       parameters:
@@ -905,6 +985,47 @@ paths:
       summary: 删除Namespace
       tags:
       - K8s
+  /api/v1/k8s/{clusterName}/pod/:
+    get:
+      description: 获取Pod列表
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 根据Pod名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Pod列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取Pod列表
+      tags:
+      - K8s
+      - Pod
   /api/v1/k8s/{clusterName}/pod/{namespace}:
     get:
       description: 获取Pod列表
@@ -1127,6 +1248,46 @@ paths:
       - K8s
       - Pod
   /api/v1/k8s/{clusterName}/secret/:
+    get:
+      description: 获取Secret列表
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 根据Secret名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Secret列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取Secret列表
+      tags:
+      - K8s
+      - Secret
     post:
       description: 创建 Opaque 类型的 Secret
       parameters:
@@ -1454,6 +1615,46 @@ paths:
       - K8s
       - Secret
   /api/v1/k8s/{clusterName}/svc/:
+    get:
+      description: 获取Svc列表
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 根据service名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回Service列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取Svc列表
+      tags:
+      - K8s
+      - Svc
     post:
       description: 创建简单 Svc, 支持通过DeploymentName 转换为 Selector, 也可以自定义Selector, 二选一。
         仅支持创建ClusterIP类型

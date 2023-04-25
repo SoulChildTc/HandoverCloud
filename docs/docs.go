@@ -248,6 +248,65 @@ const docTemplate = `{
             }
         },
         "/api/v1/k8s/{clusterName}/deployment/": {
+            "get": {
+                "description": "获取Deployment列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Deployment"
+                ],
+                "summary": "获取Deployment列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据Deployment名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Deployment列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "创建 Deployment",
                 "consumes": [
@@ -672,6 +731,65 @@ const docTemplate = `{
             }
         },
         "/api/v1/k8s/{clusterName}/ingress/": {
+            "get": {
+                "description": "获取 Ingress 列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Ingress"
+                ],
+                "summary": "获取 Ingress 列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据 Ingress 名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回 Ingress 列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "更新简单 Ingress",
                 "produces": [
@@ -1127,6 +1245,67 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/k8s/{clusterName}/pod/": {
+            "get": {
+                "description": "获取Pod列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Pod"
+                ],
+                "summary": "获取Pod列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据Pod名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Pod列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/k8s/{clusterName}/pod/{namespace}": {
             "get": {
                 "description": "获取Pod列表",
@@ -1450,6 +1629,65 @@ const docTemplate = `{
             }
         },
         "/api/v1/k8s/{clusterName}/secret/": {
+            "get": {
+                "description": "获取Secret列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Secret"
+                ],
+                "summary": "获取Secret列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据Secret名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Secret列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "更新 Opaque 类型的 Secret",
                 "produces": [
@@ -1926,6 +2164,65 @@ const docTemplate = `{
             }
         },
         "/api/v1/k8s/{clusterName}/svc/": {
+            "get": {
+                "description": "获取Svc列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "Svc"
+                ],
+                "summary": "获取Svc列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据service名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回Service列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "更新简单 Svc",
                 "produces": [
