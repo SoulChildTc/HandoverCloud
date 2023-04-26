@@ -7,8 +7,7 @@ import (
 )
 
 func InitDBMigrate() {
-	err := global.DB.AutoMigrate(model.MigrateModels...)
-
+	err := model.Init(global.DB)
 	if err != nil {
 		panic("迁移数据库模型失败! " + err.Error())
 	}

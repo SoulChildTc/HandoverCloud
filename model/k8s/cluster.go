@@ -16,3 +16,7 @@ type Cluster struct {
 	CAData      sql.NullString `json:"CAData"  gorm:"comment:CA证书"`
 	common.Timestamps
 }
+
+func (c Cluster) TableName() string {
+	return "t_k8s_cluster"
+}

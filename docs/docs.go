@@ -2486,6 +2486,85 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/system/dbInitializer/": {
+            "get": {
+                "description": "是否已经初始化数据库",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DbInitializer"
+                ],
+                "summary": "是否已经初始化数据库",
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "初始化数据库数据",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DbInitializer"
+                ],
+                "summary": "初始化数据库数据",
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/system/user/": {
+            "post": {
+                "description": "添加用户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "添加用户",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SystemAdd"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/system/user/info": {
             "get": {
                 "description": "用户信息",
@@ -2546,9 +2625,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/system/user/register": {
+        "/api/v1/system/user/{userId}/roles": {
             "post": {
-                "description": "用户注册",
+                "description": "为用户分配一个角色",
                 "consumes": [
                     "application/json"
                 ],
@@ -2558,16 +2637,23 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "用户注册",
+                "summary": "为用户分配一个角色",
                 "parameters": [
                     {
-                        "description": "用户信息",
+                        "description": "用户和角色Id: {",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.SystemRegister"
+                            "type": "object"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -2811,25 +2897,10 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.SystemLogin": {
+        "dto.SystemAdd": {
             "type": "object",
             "required": [
-                "mobile",
-                "password"
-            ],
-            "properties": {
-                "mobile": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.SystemRegister": {
-            "type": "object",
-            "required": [
-                "mobile",
+                "nickname",
                 "password",
                 "username"
             ],
@@ -2843,10 +2914,34 @@ const docTemplate = `{
                 "mobile": {
                     "type": "string"
                 },
+                "nickname": {
+                    "type": "string"
+                },
                 "password": {
                     "type": "string"
                 },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SystemLogin": {
+            "type": "object",
+            "required": [
+                "account",
+                "password"
+            ],
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }

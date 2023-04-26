@@ -6,6 +6,8 @@ import (
 )
 
 var (
-	SystemUser system.User
-	K8sCluster k8s.Cluster
+	SystemUser     system.User
+	SystemRole     system.Role
+	SystemInitData system.InitData
+	K8sCluster     k8s.Cluster
 )

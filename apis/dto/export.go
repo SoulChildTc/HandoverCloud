@@ -7,7 +7,10 @@ import (
 
 type (
 	SystemRegister                   = system.Register
+	SystemAdd                        = system.Add
 	SystemLogin                      = system.Login
+	SystemUserInfo                   = system.UserInfo
+	SystemRoleInfo                   = system.RoleInfo
 	K8sDeploymentCreate              = k8s.DeploymentCreate
 	K8sSetImage                      = k8s.SetImage
 	K8sIngressSimpleCreate           = k8s.IngressSimpleCreate

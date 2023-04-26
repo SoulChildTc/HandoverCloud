@@ -6,6 +6,8 @@ import (
 )
 
 type (
-	SystemUser system.User
-	K8sCluster k8s.Cluster
+	SystemUser = system.User
+	SystemRole = system.Role
+	SystemLock = system.Lock
+	K8sCluster = k8s.Cluster
 )

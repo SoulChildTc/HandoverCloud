@@ -140,17 +140,7 @@ definitions:
     - name
     - namespace
     type: object
-  dto.SystemLogin:
-    properties:
-      mobile:
-        type: string
-      password:
-        type: string
-    required:
-    - mobile
-    - password
-    type: object
-  dto.SystemRegister:
+  dto.SystemAdd:
     properties:
       avatar:
         type: string
@@ -158,14 +148,30 @@ definitions:
         type: string
       mobile:
         type: string
+      nickname:
+        type: string
       password:
         type: string
+      roles:
+        items:
+          type: integer
+        type: array
       username:
         type: string
     required:
-    - mobile
+    - nickname
     - password
     - username
+    type: object
+  dto.SystemLogin:
+    properties:
+      account:
+        type: string
+      password:
+        type: string
+    required:
+    - account
+    - password
     type: object
   httputil.PageResp:
     properties:
@@ -1967,6 +1973,85 @@ paths:
       tags:
       - K8s
       - Cluster
+  /api/v1/system/dbInitializer/:
+    get:
+      description: 是否已经初始化数据库
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            type: string
+      summary: 是否已经初始化数据库
+      tags:
+      - DbInitializer
+    post:
+      description: 初始化数据库数据
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            type: string
+      summary: 初始化数据库数据
+      tags:
+      - DbInitializer
+  /api/v1/system/user/:
+    post:
+      consumes:
+      - application/json
+      description: 添加用户
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SystemAdd'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 添加用户
+      tags:
+      - User
+  /api/v1/system/user/{userId}/roles:
+    post:
+      consumes:
+      - application/json
+      description: 为用户分配一个角色
+      parameters:
+      - description: '用户和角色Id: {'
+        in: body
+        name: data
+        required: true
+        schema:
+          type: object
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 为用户分配一个角色
+      tags:
+      - User
   /api/v1/system/user/info:
     get:
       description: 用户信息
@@ -2004,28 +2089,6 @@ paths:
           schema:
             $ref: '#/definitions/httputil.ResponseBody'
       summary: 用户登录
-      tags:
-      - User
-  /api/v1/system/user/register:
-    post:
-      consumes:
-      - application/json
-      description: 用户注册
-      parameters:
-      - description: 用户信息
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.SystemRegister'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功返回
-          schema:
-            $ref: '#/definitions/httputil.ResponseBody'
-      summary: 用户注册
       tags:
       - User
   /ping:
