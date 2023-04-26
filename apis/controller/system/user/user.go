@@ -83,7 +83,7 @@ func Info(c *gin.Context) {
 //	@summary		添加用户
 //	@accept			json
 //	@produce		json
-//	@param			data			body	dto.SystemAdd		true	"用户信息"
+//	@param			data			body	dto.SystemAdd			true	"用户信息"
 //	@Param			Authorization	header	string					true	"Authorization token"
 //	@success		200				object	httputil.ResponseBody	"成功返回"
 //	@router			/api/v1/system/user/ [post]
@@ -109,8 +109,8 @@ func AddUser(c *gin.Context) {
 //	@summary		为用户分配一个角色
 //	@accept			json
 //	@produce		json
-//	@param			data			body	object		true		"用户和角色Id: {"userId": 1, roleId: 1}"
-//	@Param			Authorization	header	string					true	"Authorization token"
+//	@param			data			body		object					true	"用户和角色Id: {"userId": 1, roleId: 1}"
+//	@Param			Authorization	header		string					true	"Authorization token"
 //	@success		200				{object}	httputil.ResponseBody	"成功返回"
 //	@router			/api/v1/system/user/{userId}/roles [post]
 func AssignRole(c *gin.Context) {

@@ -12,7 +12,7 @@ import (
 //	@tags			DbInitializer
 //	@summary		是否已经初始化数据库
 //	@produce		json
-//	@success		200		object	string	"成功返回"
+//	@success		200	object	string	"成功返回"
 //	@router			/api/v1/system/dbInitializer/ [get]
 func IsInit(c *gin.Context) {
 	err, res := service.SystemInitData.IsInit()
@@ -29,7 +29,7 @@ func IsInit(c *gin.Context) {
 //	@tags			DbInitializer
 //	@summary		初始化数据库数据
 //	@produce		json
-//	@success		200		object	string	"成功返回"
+//	@success		200	object	string	"成功返回"
 //	@router			/api/v1/system/dbInitializer/ [post]
 func InitData(c *gin.Context) {
 	err := service.SystemInitData.InitData()
