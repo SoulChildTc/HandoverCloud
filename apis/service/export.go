@@ -6,6 +6,7 @@ import (
 	"soul/apis/service/k8s/ingress"
 	"soul/apis/service/k8s/namespace"
 	"soul/apis/service/k8s/pod"
+	"soul/apis/service/k8s/prometheus"
 	"soul/apis/service/k8s/secret"
 	"soul/apis/service/k8s/svc"
 	"soul/apis/service/system/dbInitializer"
@@ -13,13 +14,14 @@ import (
 )
 
 var (
-	SystemUser     user.User
-	SystemInitData dbInitializer.InitData
-	K8sPod         pod.Pod
-	K8sDeployment  deployment.Deployment
-	K8sIngress     ingress.Ingress
-	K8sNamespace   namespace.Namespace
-	K8sSvc         svc.Svc
-	K8sSecret      secret.Secret
-	K8sCluster     cluster.Cluster
+	SystemUser                  user.User
+	SystemInitData              dbInitializer.InitData
+	K8sPod                      pod.Pod
+	K8sDeployment               deployment.Deployment
+	K8sIngress                  ingress.Ingress
+	K8sNamespace                namespace.Namespace
+	K8sSvc                      svc.Svc
+	K8sSecret                   secret.Secret
+	K8sCluster                  cluster.Cluster
+	K8sPrometheusServiceMonitor prometheus.ServiceMonitor
 )

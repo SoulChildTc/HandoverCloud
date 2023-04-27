@@ -13,10 +13,10 @@ func (d *Discovery) GetResourceByGV(clusterName, gv string) (resources []metav1.
 
 	_, apiResourceList, _ := global.K8s.Use(clusterName).CacheDiscovery.ServerGroupsAndResources()
 
-	for _, apiResourceList := range apiResourceList {
-		// apiResourceList包含一个gv + n个apiResource
-		if apiResourceList.GroupVersion == gv {
-			for _, apiResource := range apiResourceList.APIResources {
+	for _, apiResources := range apiResourceList {
+		// apiResource包含一个gv + n个apiResource
+		if apiResources.GroupVersion == gv {
+			for _, apiResource := range apiResources.APIResources {
 				resources = append(resources, apiResource)
 			}
 		}

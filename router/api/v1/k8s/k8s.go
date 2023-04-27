@@ -7,6 +7,7 @@ import (
 	k8singress "soul/apis/controller/k8s/ingress"
 	k8snamespace "soul/apis/controller/k8s/namespace"
 	k8spod "soul/apis/controller/k8s/pod"
+	k8sprometheus "soul/apis/controller/k8s/prometheus"
 	k8ssecret "soul/apis/controller/k8s/secret"
 	k8ssvc "soul/apis/controller/k8s/svc"
 	"soul/middleware"
@@ -93,5 +94,21 @@ func RegisterRoute(r *gin.RouterGroup) {
 		secret.PUT("/_docker-registry", k8ssecret.UpdateSecretForDockerRegistry)
 		secret.POST("/_tls", k8ssecret.CreateSecretForTls)
 		secret.PUT("/_tls", k8ssecret.UpdateSecretForTls)
+	}
+
+	prometheus := cluster.Group("/prometheus")
+	{
+		prometheusRouteGroup(prometheus)
+	}
+
+}
+
+func prometheusRouteGroup(r *gin.RouterGroup) {
+	servicemonitor := r.Group("/servicemonitor")
+	{
+		servicemonitor.GET("/", k8sprometheus.GetServiceMonitorList)
+		servicemonitor.GET("/:namespace", k8sprometheus.GetServiceMonitorList)
+		servicemonitor.GET("/:namespace/:name", k8sprometheus.GetServiceMonitorByName)
+		servicemonitor.DELETE("/:namespace/:name", k8sprometheus.DeleteServiceMonitorByName)
 	}
 }
