@@ -33,6 +33,33 @@ func Login(c *gin.Context) {
 	httputil.OK(c, res, "登录成功")
 }
 
+// RefreshToken
+//
+//	@description	刷新用户Token
+//	@tags			User
+//	@summary		刷新用户Token
+//	@accept			json
+//	@produce		json
+//	@param			data	body	object					true	"{"refreshToken": ""}"
+//	@success		200		object	httputil.ResponseBody	"成功返回token"
+//	@router			/api/v1/system/user/refreshToken [post]
+func RefreshToken(c *gin.Context) {
+	refreshToken := new(struct {
+		RefreshToken string
+	})
+	err := c.ShouldBindJSON(refreshToken)
+	if refreshToken.RefreshToken == "" {
+		httputil.Error(c, "refreshToken不能为空")
+		return
+	}
+	res, err := service.SystemUser.RefreshToken(refreshToken.RefreshToken)
+	if err != nil {
+		httputil.Error(c, err.Error())
+		return
+	}
+	httputil.OK(c, res, "操作成功")
+}
+
 // Register
 //
 //	@description	用户注册

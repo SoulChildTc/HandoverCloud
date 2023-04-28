@@ -14,6 +14,7 @@ func RegisterRoute(r *gin.RouterGroup) {
 	userGroup := r.Group("/user")
 	{
 		userGroup.POST("/login", user.Login)
+		userGroup.POST("/refreshToken", user.RefreshToken)
 		//userGroup.POST("/register", user.Register) // 关闭注册
 	}
 

@@ -13,19 +13,24 @@ var (
 )
 
 type CustomClaims struct {
-	UserID   uint   `json:"user_id"`
-	UserName string `json:"user_name"`
+	UserID       uint   `json:"user_id"`
+	UserName     string `json:"user_name"`
+	RefreshToken bool   `json:"refresh_token"`
 	jwt.RegisteredClaims
 }
 
-func CreateJwtToken(userid uint, username string) (string, error) {
+func CreateJwtToken(userid uint, username string, refreshToken bool) (string, error) {
 	signingKey := []byte(global.Config.Jwt.Secret)
 	ttl := global.Config.Jwt.Ttl
+	if refreshToken {
+		ttl += 7 * time.Hour * 24
+	}
 	iss := global.Config.AppName
 
 	claims := CustomClaims{
-		UserID:   userid,
-		UserName: username,
+		UserID:       userid,
+		UserName:     username,
+		RefreshToken: refreshToken,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    iss,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Local().Add(ttl)),
@@ -41,7 +46,6 @@ func CreateJwtToken(userid uint, username string) (string, error) {
 		return "", err
 	}
 	return ss, nil
-
 }
 
 func ParseJwtToken(tokenString string) (*CustomClaims, error) {

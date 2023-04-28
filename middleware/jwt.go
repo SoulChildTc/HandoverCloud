@@ -36,6 +36,11 @@ func JwtAuth(c *gin.Context) {
 		c.Abort()
 		return
 	}
+	if tokenObj.RefreshToken {
+		httputil.Error(c, "无效的token")
+		c.Abort()
+		return
+	}
 
 	c.Set("userId", tokenObj.UserID)
 	//c.Set("token", tokenObj)
