@@ -44,7 +44,6 @@ func (u *User) Add(user dto.SystemAdd) (string, bool) {
 		return "禁止添加admin注册", false
 	}
 
-	// todo 判断账号是否存在，手机号、用户名、邮箱
 	existUser := dao.SystemUser.GetUserByAccount(user.Mobile)
 	if existUser != nil {
 		return "手机号已存在", false
@@ -92,7 +91,7 @@ func (u *User) Add(user dto.SystemAdd) (string, bool) {
 }
 
 func (u *User) Login(user dto.SystemLogin) (map[string]any, error) {
-	existUser := dao.SystemUser.GetUserByAccount(user.Account)
+	existUser := dao.SystemUser.GetUserByAccount(user.Username)
 	if existUser == nil {
 		return nil, errors.New("账号不存在")
 	}
@@ -100,10 +99,16 @@ func (u *User) Login(user dto.SystemLogin) (map[string]any, error) {
 		return nil, errors.New("手机号或密码错误")
 	}
 
-	token, err := utils.CreateJwtToken(existUser.ID.ID, existUser.Username)
+	token, err := utils.CreateJwtToken(existUser.ID.ID, existUser.Username, false)
 	if err != nil {
 		log.Error(err.Error())
 		return nil, errors.New("生成token发生错误")
+	}
+
+	refreshToken, err := utils.CreateJwtToken(existUser.ID.ID, existUser.Username, true)
+	if err != nil {
+		log.Error(err.Error())
+		return nil, errors.New("生成refreshToken发生错误")
 	}
 
 	jwtToken, err := utils.ParseJwtToken(token)
@@ -111,10 +116,41 @@ func (u *User) Login(user dto.SystemLogin) (map[string]any, error) {
 		return nil, err
 	}
 	return map[string]any{
-		"accessToken": token,
-		"expires":     jwtToken.ExpiresAt,
-		"username":    existUser.Username,
-		"roles":       existUser.RolesToList(),
+		"accessToken":  token,
+		"refreshToken": refreshToken,
+		"expires":      jwtToken.ExpiresAt,
+		"username":     existUser.Username,
+		"nickname":     existUser.Nickname,
+		"avatar":       existUser.Avatar,
+		"roles":        existUser.RolesToList(),
+	}, nil
+}
+
+func (u *User) RefreshToken(refreshToken string) (map[string]any, error) {
+
+	refreshTokenClaim, err := utils.ParseJwtToken(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	if !refreshTokenClaim.RefreshToken {
+		return nil, errors.New("无效的refreshToken")
+	}
+
+	token, err := utils.CreateJwtToken(refreshTokenClaim.UserID, refreshTokenClaim.UserName, false)
+	if err != nil {
+		log.Error(err.Error())
+		return nil, errors.New("生成token发生错误")
+	}
+
+	accessToken, err := utils.ParseJwtToken(token)
+	if err != nil {
+		return nil, err
+	}
+	return map[string]any{
+		"accessToken":  token,
+		"refreshToken": refreshToken,
+		"expires":      accessToken.ExpiresAt,
 	}, nil
 }
 

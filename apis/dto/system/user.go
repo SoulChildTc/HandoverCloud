@@ -15,7 +15,7 @@ type Register struct {
 }
 
 type Login struct {
-	Account  string `json:"account" binding:"required" required_err:"账号不能为空"`
+	Username string `json:"username" binding:"required" required_err:"账号不能为空"`
 	Password string `json:"password" binding:"required" required_err:"密码不能为空"`
 }
 
