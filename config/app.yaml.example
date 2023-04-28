@@ -44,4 +44,4 @@ database:
   reportCaller: true
 jwt:
   secret: soul
-  jwtTtl: 12h
+  ttl: 12h
