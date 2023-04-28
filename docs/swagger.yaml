@@ -165,13 +165,13 @@ definitions:
     type: object
   dto.SystemLogin:
     properties:
-      account:
-        type: string
       password:
         type: string
+      username:
+        type: string
     required:
-    - account
     - password
+    - username
     type: object
   httputil.PageResp:
     properties:
@@ -1255,6 +1255,155 @@ paths:
       tags:
       - K8s
       - Pod
+  /api/v1/k8s/{clusterName}/prometheus/servicemonitor/:
+    get:
+      description: 获取ServiceMonitor列表
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 根据ServiceMonitor名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回ServiceMonitor列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取ServiceMonitor列表
+      tags:
+      - K8s
+      - ServiceMonitor
+  /api/v1/k8s/{clusterName}/prometheus/servicemonitor/{namespace}:
+    get:
+      description: 获取ServiceMonitor列表
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: Namespace 不填为全部
+        in: path
+        name: namespace
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 根据ServiceMonitor名字模糊查询
+        in: query
+        name: filter
+        type: string
+      - description: 一页获取多少条数据,默认十条
+        in: query
+        name: limit
+        type: string
+      - description: 获取第几页的数据,默认第一页
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回ServiceMonitor列表
+          schema:
+            $ref: '#/definitions/httputil.PageResponseBody'
+      summary: 获取ServiceMonitor列表
+      tags:
+      - K8s
+      - ServiceMonitor
+  /api/v1/k8s/{clusterName}/prometheus/servicemonitor/{namespace}/{name}:
+    delete:
+      description: 删除ServiceMonitor
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: ServiceMonitor名称
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回
+      summary: 删除ServiceMonitor
+      tags:
+      - K8s
+      - ServiceMonitor
+    get:
+      description: 获取ServiceMonitor信息
+      parameters:
+      - description: Cluster Name
+        in: path
+        name: clusterName
+        required: true
+        type: string
+      - description: ServiceMonitor名称
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Namespace
+        in: path
+        name: namespace
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回ServiceMonitor信息
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 获取ServiceMonitor信息
+      tags:
+      - K8s
+      - ServiceMonitor
   /api/v1/k8s/{clusterName}/secret/:
     get:
       description: 获取Secret列表
@@ -2089,6 +2238,28 @@ paths:
           schema:
             $ref: '#/definitions/httputil.ResponseBody'
       summary: 用户登录
+      tags:
+      - User
+  /api/v1/system/user/refreshToken:
+    post:
+      consumes:
+      - application/json
+      description: 刷新用户Token
+      parameters:
+      - description: '{'
+        in: body
+        name: data
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回token
+          schema:
+            $ref: '#/definitions/httputil.ResponseBody'
+      summary: 刷新用户Token
       tags:
       - User
   /ping:

@@ -1628,6 +1628,225 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/k8s/{clusterName}/prometheus/servicemonitor/": {
+            "get": {
+                "description": "获取ServiceMonitor列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "ServiceMonitor"
+                ],
+                "summary": "获取ServiceMonitor列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据ServiceMonitor名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回ServiceMonitor列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/{clusterName}/prometheus/servicemonitor/{namespace}": {
+            "get": {
+                "description": "获取ServiceMonitor列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "ServiceMonitor"
+                ],
+                "summary": "获取ServiceMonitor列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace 不填为全部",
+                        "name": "namespace",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据ServiceMonitor名字模糊查询",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "一页获取多少条数据,默认十条",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "获取第几页的数据,默认第一页",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回ServiceMonitor列表",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.PageResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/k8s/{clusterName}/prometheus/servicemonitor/{namespace}/{name}": {
+            "get": {
+                "description": "获取ServiceMonitor信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "ServiceMonitor"
+                ],
+                "summary": "获取ServiceMonitor信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ServiceMonitor名称",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回ServiceMonitor信息",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除ServiceMonitor",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "K8s",
+                    "ServiceMonitor"
+                ],
+                "summary": "删除ServiceMonitor",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "clusterName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ServiceMonitor名称",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Namespace",
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回"
+                    }
+                }
+            }
+        },
         "/api/v1/k8s/{clusterName}/secret/": {
             "get": {
                 "description": "获取Secret列表",
@@ -2625,6 +2844,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/system/user/refreshToken": {
+            "post": {
+                "description": "刷新用户Token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "刷新用户Token",
+                "parameters": [
+                    {
+                        "description": "{",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回token",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/system/user/{userId}/roles": {
             "post": {
                 "description": "为用户分配一个角色",
@@ -2934,14 +3187,14 @@ const docTemplate = `{
         "dto.SystemLogin": {
             "type": "object",
             "required": [
-                "account",
-                "password"
+                "password",
+                "username"
             ],
             "properties": {
-                "account": {
+                "password": {
                     "type": "string"
                 },
-                "password": {
+                "username": {
                     "type": "string"
                 }
             }
