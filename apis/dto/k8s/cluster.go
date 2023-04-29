@@ -12,4 +12,5 @@ type ClusterInfo struct {
 	Host            string          `json:"host" binding:"http_url" msg:"Host必须是http(s) url"`
 	BearerToken     string          `json:"bearerToken" binding:"jwt|len=0,required_without=TLSClientConfig.CertData" msg:"token必须为jwt格式" required_without_err:"BearerToken和tls客户端认证二选一"`
 	TLSClientConfig TlsClientConfig `json:"TLSClientConfig"`
+	Version         string          `json:"version,omitempty"`
 }

@@ -17,6 +17,7 @@ type Cluster struct{}
 
 func (c *Cluster) GetClusterByName(clusterName string) *dto.K8sClusterInfo {
 	config := global.K8s.Get(clusterName).Config
+	version, _ := global.K8s.Use(clusterName).ClientSet.ServerVersion()
 	info := &dto.K8sClusterInfo{
 		ClusterName: clusterName,
 		Host:        config.Host,
@@ -27,6 +28,7 @@ func (c *Cluster) GetClusterByName(clusterName string) *dto.K8sClusterInfo {
 			KeyData:  string(config.TLSClientConfig.KeyData),
 			CAData:   string(config.TLSClientConfig.CAData),
 		},
+		Version: version.String(),
 	}
 
 	return info
