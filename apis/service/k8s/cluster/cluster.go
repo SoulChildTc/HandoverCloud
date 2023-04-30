@@ -1,9 +1,12 @@
 package cluster
 
 import (
+	"context"
 	"database/sql"
 	"errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
+	"sort"
 	"soul/apis/dao"
 	"soul/apis/dto"
 	"soul/apis/dto/k8s"
@@ -15,37 +18,62 @@ import (
 
 type Cluster struct{}
 
-func (c *Cluster) GetClusterByName(clusterName string) *dto.K8sClusterInfo {
-	config := global.K8s.Get(clusterName).Config
-	version, _ := global.K8s.Use(clusterName).ClientSet.ServerVersion()
+func (c *Cluster) GetClusterByName(clusterName string, force bool) *dto.K8sClusterInfo {
+	cluster := global.K8s.Get(clusterName)
 	info := &dto.K8sClusterInfo{
-		ClusterName: clusterName,
-		Host:        config.Host,
-		BearerToken: config.BearerToken,
-		TLSClientConfig: k8s.TlsClientConfig{
-			Insecure: config.TLSClientConfig.Insecure,
-			CertData: string(config.TLSClientConfig.CertData),
-			KeyData:  string(config.TLSClientConfig.KeyData),
-			CAData:   string(config.TLSClientConfig.CAData),
+		ClusterCreate: k8s.ClusterCreate{
+			ClusterName: clusterName,
+			Host:        cluster.Config.Host,
+			BearerToken: cluster.Config.BearerToken,
+			TLSClientConfig: k8s.TlsClientConfig{
+				Insecure: cluster.Config.TLSClientConfig.Insecure,
+				CertData: string(cluster.Config.TLSClientConfig.CertData),
+				KeyData:  string(cluster.Config.TLSClientConfig.KeyData),
+				CAData:   string(cluster.Config.TLSClientConfig.CAData),
+			},
 		},
-		Version: version.String(),
+		Version: cluster.Version,
+		Status:  cluster.Status,
+		NodeNum: cluster.NodeNum,
+	}
+	if force {
+		version, err := global.K8s.Use(clusterName).CacheDiscovery.ServerVersion()
+		if err != nil {
+			info.Status = err.Error()
+
+		} else {
+			info.Version = version.String()
+			nodes, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
+			info.NodeNum = uint(len(nodes.Items))
+			if err != nil && info.Status != err.Error() {
+				info.Status += ". " + err.Error()
+			} else {
+				info.Status = "运行中"
+			}
+		}
 	}
 
 	return info
 }
 
-func (c *Cluster) GetClusterList() (clusterInfos []dto.K8sClusterInfo) {
+func (c *Cluster) GetClusterList(force bool) (clusterInfos []dto.K8sClusterInfo) {
 	clusters := global.K8s.ListName()
 
 	for _, clusterName := range clusters {
-		info := c.GetClusterByName(clusterName)
+		info := c.GetClusterByName(clusterName, force)
+		if info == nil {
+			continue
+		}
 		clusterInfos = append(clusterInfos, *info)
 	}
 
+	sort.Slice(clusterInfos, func(i, j int) bool {
+		return clusterInfos[i].ClusterName < clusterInfos[j].ClusterName
+	})
 	return clusterInfos
 }
 
-func (c *Cluster) AddCluster(info dto.K8sClusterInfo) error {
+func (c *Cluster) AddCluster(info dto.K8sClusterCreate) error {
 	if global.K8s.Get(info.ClusterName) != nil {
 		return errors.New("集群已存在")
 	}
@@ -101,7 +129,7 @@ func (c *Cluster) AddCluster(info dto.K8sClusterInfo) error {
 	return nil
 }
 
-func (c *Cluster) UpdateCluster(info dto.K8sClusterInfo) error {
+func (c *Cluster) UpdateCluster(info dto.K8sClusterCreate) error {
 	if global.K8s.Get(info.ClusterName) == nil {
 		return errors.New("集群不存在")
 	}

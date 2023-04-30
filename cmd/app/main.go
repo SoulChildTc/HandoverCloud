@@ -7,6 +7,7 @@ import (
 	"soul/internal/k8s"
 	"soul/internal/logger"
 	"soul/internal/server"
+	"soul/internal/tasks"
 )
 
 func init() {
@@ -26,6 +27,9 @@ func init() {
 
 	// 初始化client-go
 	global.K8s = k8s.InitClient(global.DB, global.Config.KubeConfig, global.Config.InCluster)
+
+	// 初始化后台任务
+	tasks.InitTasks()
 }
 
 func Execute() {

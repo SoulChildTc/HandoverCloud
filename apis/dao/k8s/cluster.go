@@ -21,8 +21,9 @@ func (c *Cluster) UpdateCluster(cluster *model.K8sCluster) error {
 	result := global.DB.
 		Model(&model.K8sCluster{}).
 		Select("*").
+		Omit("id").
 		Where("cluster_name = ?", cluster.ClusterName).
-		Updates(cluster)
+		Updates(*cluster)
 	return result.Error
 }
 

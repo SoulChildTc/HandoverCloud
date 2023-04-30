@@ -6,6 +6,7 @@ import (
 	"soul/apis/service"
 	log "soul/internal/logger"
 	"soul/utils/httputil"
+	"strconv"
 )
 
 // GetClusterByName
@@ -16,6 +17,7 @@ import (
 //	@produce		json
 //	@param			clusterName		path	string					true	"Cluster Name"
 //	@Param			Authorization	header	string					true	"Authorization token"
+//	@Param			force			query	bool					false	"强制查询,不走缓存"
 //	@success		200				object	httputil.ResponseBody	"成功返回集群信息"
 //	@router			/api/v1/k8s/cluster/{clusterName}/ [get]
 func GetClusterByName(c *gin.Context) {
@@ -24,9 +26,14 @@ func GetClusterByName(c *gin.Context) {
 		return
 	}
 
+	force, err := strconv.ParseBool(c.DefaultQuery("force", "false"))
+	if err != nil {
+		force = false
+	}
+
 	clusterName := c.Param("clusterName")
 
-	cluster := service.K8sCluster.GetClusterByName(clusterName)
+	cluster := service.K8sCluster.GetClusterByName(clusterName, force)
 
 	httputil.OK(c, cluster, "获取成功")
 }
@@ -37,11 +44,16 @@ func GetClusterByName(c *gin.Context) {
 //	@tags			K8s,Cluster
 //	@summary		获取集群列表
 //	@produce		json
+//	@Param			force			query	bool					false	"强制查询,不走缓存"
 //	@Param			Authorization	header	string					true	"Authorization token"
 //	@success		200				object	httputil.ResponseBody	"成功返回集群列表"
 //	@router			/api/v1/k8s/cluster/ [get]
 func GetClusterList(c *gin.Context) {
-	cluster := service.K8sCluster.GetClusterList()
+	force, err := strconv.ParseBool(c.DefaultQuery("force", "false"))
+	if err != nil {
+		force = false
+	}
+	cluster := service.K8sCluster.GetClusterList(force)
 
 	httputil.OK(c, cluster, "获取成功")
 }
@@ -65,7 +77,7 @@ func AddCluster(c *gin.Context) {
 
 	clusterName := c.Param("clusterName")
 
-	cluster := dto.K8sClusterInfo{}
+	cluster := dto.K8sClusterCreate{}
 
 	if err := c.ShouldBindJSON(&cluster); err != nil {
 		log.Debug(err.Error())
@@ -103,7 +115,7 @@ func UpdateCluster(c *gin.Context) {
 
 	clusterName := c.Param("clusterName")
 
-	cluster := dto.K8sClusterInfo{}
+	cluster := dto.K8sClusterCreate{}
 
 	if err := c.ShouldBindJSON(&cluster); err != nil {
 		httputil.Error(c, httputil.ParseValidateError(err, &cluster).Error())

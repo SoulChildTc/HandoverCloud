@@ -27,3 +27,4 @@
 .vscode/
 log/
 data.db
+cache

@@ -18,6 +18,7 @@ type (
 	K8sSecretCreate                  = k8s.SecretCreate
 	K8sSecretForDockerRegistryCreate = k8s.SecretForDockerRegistryCreate
 	K8sSecretForTlsCreate            = k8s.SecretForTlsCreate
+	K8sClusterCreate                 = k8s.ClusterCreate
 	K8sClusterInfo                   = k8s.ClusterInfo
 	//SystemUserInfo system.UserInfo
 )

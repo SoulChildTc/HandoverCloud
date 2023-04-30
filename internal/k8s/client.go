@@ -22,6 +22,9 @@ type Client struct {
 	CacheDiscovery discovery.DiscoveryInterface
 	DynamicClient  *dynamic.DynamicClient
 	Static         bool
+	Version        string
+	Status         string
+	NodeNum        uint
 }
 
 // ClusterMap 用于存储多个集群的client
@@ -55,7 +58,7 @@ func (c *ClusterMap) Update(clusterName string, client *Client) {
 	c.Clusters[clusterName] = client
 }
 
-// List 列出所有集群名称
+// List 列出所有集群
 func (c *ClusterMap) List() (clusterList []*Client) {
 	for _, client := range c.Clusters {
 		clusterList = append(clusterList, client)
@@ -202,6 +205,10 @@ func (c *ClusterMap) newMemCacheDiscoveryClient(restConf *rest.Config) (discover
 	}
 	discoveryClient = memory.NewMemCacheClient(discoveryClient)
 	return
+}
+
+func GetClusterMap() *ClusterMap {
+	return clusters
 }
 
 // InitClient 初始化所有集群Client
