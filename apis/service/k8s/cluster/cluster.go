@@ -20,6 +20,21 @@ type Cluster struct{}
 
 func (c *Cluster) GetClusterByName(clusterName string, force bool) *dto.K8sClusterInfo {
 	cluster := global.K8s.Get(clusterName)
+	if force {
+		version, err := cluster.CacheDiscovery.ServerVersion()
+		if err != nil {
+			cluster.Status = err.Error()
+		} else {
+			cluster.Version = version.String()
+			nodes, err := cluster.ClientSet.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
+			cluster.NodeNum = uint(len(nodes.Items))
+			if err != nil && cluster.Status != err.Error() {
+				cluster.Status += ". " + err.Error()
+			} else {
+				cluster.Status = "运行中"
+			}
+		}
+	}
 	info := &dto.K8sClusterInfo{
 		ClusterCreate: k8s.ClusterCreate{
 			ClusterName: clusterName,
@@ -35,22 +50,6 @@ func (c *Cluster) GetClusterByName(clusterName string, force bool) *dto.K8sClust
 		Version: cluster.Version,
 		Status:  cluster.Status,
 		NodeNum: cluster.NodeNum,
-	}
-	if force {
-		version, err := global.K8s.Use(clusterName).CacheDiscovery.ServerVersion()
-		if err != nil {
-			info.Status = err.Error()
-
-		} else {
-			info.Version = version.String()
-			nodes, err := global.K8s.Use(clusterName).ClientSet.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
-			info.NodeNum = uint(len(nodes.Items))
-			if err != nil && info.Status != err.Error() {
-				info.Status += ". " + err.Error()
-			} else {
-				info.Status = "运行中"
-			}
-		}
 	}
 
 	return info
@@ -171,10 +170,13 @@ func (c *Cluster) UpdateCluster(info dto.K8sClusterCreate) error {
 }
 
 func (c *Cluster) DeleteCluster(clusterName string) error {
+	if global.K8s.Get(clusterName).Static == true {
+		return errors.New("静态集群不能删除")
+	}
 	err := dao.K8sCluster.DeleteClusterByName(clusterName)
 	if err != nil {
 		log.Error(err.Error())
-		return errors.New("集群删除失败")
+		return errors.New("集群删除失败" + err.Error())
 	}
 	global.K8s.Remove(clusterName)
 	return nil
