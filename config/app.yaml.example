@@ -2,7 +2,7 @@ appName: soul
 listen: 0.0.0.0
 port: 8080
 kubeConfig: "path/config"
-inCluster: true
+inCluster: false
 log:
   # [TRACE, DEBUG, INFO, WARN, ERROR, FATAL, PANIC]
   level: TRACE
